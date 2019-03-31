@@ -25,20 +25,21 @@ public class RssAggregatorApplication {
 		FeedAggregate feedAggregate = new FeedAggregate();
 		List<Thread> threads = new ArrayList<>();
 
-		for (String feed : feeds) {
+
+		feeds.forEach(feed -> {
 			RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
 			Thread thread = new Thread(parser);
 			threads.add(thread);
 			thread.start();
-		}
+		});
 
-		for (Thread thread: threads) {
+		threads.forEach(thread -> {
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+		});
 
 		return feedAggregate;
 	}
