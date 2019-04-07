@@ -35,6 +35,7 @@ public class RssAggregatorApplicationTests {
     @Test
     public void feedAggregateIsNotEmpty() {
         FeedAggregate feedAggregate = aggregate(feeds);
+        System.out.println("size: " + feedAggregate.getAggregatedList().size());
         Assert.notEmpty(feedAggregate.getAggregatedList(), "List is empty");
     }
 
