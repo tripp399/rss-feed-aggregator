@@ -100,7 +100,7 @@ public class RSSFeedParser implements Runnable {
                         message.setGuid(guid);
                         message.setLink(link);
                         message.setTitle(title);
-                        feed.getMessages().add(message);
+//                        feed.getMessages().add(message);
                         aggregate.addFeedMessage(message);
                     }
                 }

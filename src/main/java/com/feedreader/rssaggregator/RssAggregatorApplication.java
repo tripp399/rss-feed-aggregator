@@ -25,7 +25,6 @@ public class RssAggregatorApplication {
 		FeedAggregate feedAggregate = new FeedAggregate();
 		List<Thread> threads = new ArrayList<>();
 
-
 		feeds.forEach(feed -> {
 			RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
 			Thread thread = new Thread(parser);
