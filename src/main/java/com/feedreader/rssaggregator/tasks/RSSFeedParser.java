@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.concurrent.BlockingQueue;
 
 public class RSSFeedParser implements Runnable {
@@ -49,7 +50,6 @@ public class RSSFeedParser implements Runnable {
             String author = "";
             String pubdate = "";
             String guid = "";
-            String pubDate = "";
 
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
             InputStream in = read();
@@ -101,11 +101,17 @@ public class RSSFeedParser implements Runnable {
                             message.setLink(link);
                             message.setTitle(title);
                             message.setPubDate(pubdate);
-                            System.out.println("Added a new message");
+//                            System.out.println("Added a new message");
                             this.feedMessages.offer(message);
                         }
                     }
-                }catch (Exception e){
+                } catch (MalformedURLException e) {
+                    continue;
+                } catch (ParseException e) {
+                    continue;
+                } catch (NumberFormatException e) {
+                    continue;
+                } catch (Exception e) {
                     continue;
                 }
             }

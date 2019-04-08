@@ -30,9 +30,9 @@ public class RSSFeedAggregator implements  Runnable{
         while(true){
             FeedMessage message = null;
             try {
-                message = this.feedMessagesQueue.poll(15000, TimeUnit.MILLISECONDS);
+                message = this.feedMessagesQueue.poll(10000, TimeUnit.MILLISECONDS);
                 if(message != null){
-                    System.out.println("Received a new message");
+//                    System.out.println("Received a new message");
                     this.sortedFeedMessagesSet.add(message);
                 }else{
                     System.out.println("Sorted feed message set size:"+this.sortedFeedMessagesSet.size());
