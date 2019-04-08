@@ -1,0 +1,10 @@
+<p>
+  home works!
+</p>
+<div *ngIf="this.feedAggregate">
+  <ul>
+    <li *ngFor="let aggregate of this.feedAggregate.aggregateList">
+      {{ aggregate.title }}
+    </li>
+  </ul>
+</div>
