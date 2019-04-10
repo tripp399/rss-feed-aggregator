@@ -1,19 +1,30 @@
 package com.feedreader.rssaggregator;
 
 import com.feedreader.rssaggregator.model.FeedAggregate;
+import com.feedreader.rssaggregator.model.FeedsStore;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @SpringBootApplication
 public class RssAggregatorApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RssAggregatorApplication.class, args);
+
+
+        List<String> opmlList = new ArrayList<String>();
+		opmlList.add("http://paulirish.github.io/frontend-feeds/frontend-feeds.opml");
+		opmlList.add("https://raw.githubusercontent.com/yasuharu519/opml/master/main.opml");
+		opmlList.add("https://github.com/cudeso/OPML-Security-Feeds/blob/master/feedly.opml");
+
+		OPMLAggregator op = new OPMLAggregator();
+		HashSet<FeedsStore> allFeedsList = op.aggregateOPML(opmlList);
+		//allFeedsList contains all the xmlUrls to be displayed
 
         List<String> feeds = new ArrayList<>();
         feeds.add("http://podcasts.joerogan.net/feed");
