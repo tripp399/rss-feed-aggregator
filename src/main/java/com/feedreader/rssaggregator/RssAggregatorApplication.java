@@ -30,6 +30,7 @@ public class RssAggregatorApplication {
 
 		//allFeedsList contains all the xmlUrls to be displayed
 
+
 		List<String> feeds = new ArrayList<>();
 		for(FeedsStore feedStore: allFeedsList) {
 			feeds.add(feedStore.getXmlUrl());
@@ -76,4 +77,5 @@ public class RssAggregatorApplication {
 
 		return feedAggregate;
 	}
+
 }
