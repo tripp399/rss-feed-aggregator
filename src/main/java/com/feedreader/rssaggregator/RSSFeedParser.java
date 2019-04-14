@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class RSSFeedParser implements Runnable {
     private static final String TITLE = "title";
@@ -106,7 +107,7 @@ public class RSSFeedParser implements Runnable {
                 }
             }
         } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
+            // throw new RuntimeException(e);
         }
         return feed;
     }
@@ -123,7 +124,13 @@ public class RSSFeedParser implements Runnable {
 
     private InputStream read() {
         try {
-            return url.openStream();
+            // return url.openStream();
+            URLConnection openConnection = url.openConnection();
+            openConnection.addRequestProperty(
+              "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0"
+              );
+            return openConnection.getInputStream();
+            // return null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

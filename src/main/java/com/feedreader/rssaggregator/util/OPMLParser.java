@@ -1,4 +1,4 @@
-package com.feedreader.rssaggregator;
+package com.feedreader.rssaggregator.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 import javax.xml.stream.XMLEventReader;
@@ -90,14 +91,29 @@ public class OPMLParser implements Runnable{
 					continue;
 				}
 				if(!xmlUrl.isEmpty()) {
-					FeedsStore feedStore = new FeedsStore(title, htmlUrl, xmlUrl, text, type);
-					feedsList.add(feedStore);
+          try {
+            URL url = new URL(xmlUrl);
+            // url.openConnection().getInputStream();
+            URLConnection openConnection = url.openConnection();
+            openConnection.addRequestProperty(
+              "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0"
+              );
+            openConnection.getInputStream();
+            
+            FeedsStore feedStore = new FeedsStore(title, htmlUrl, xmlUrl, text, type);
+					  feedsList.add(feedStore);
+          }
+          catch (Exception e) { }
+					// FeedsStore feedStore = new FeedsStore(title, htmlUrl, xmlUrl, text, type);
+					// feedsList.add(feedStore);
 				}
 			}
 		}
 		catch (Exception e) {
-			System.out.println(e);
-			throw new RuntimeException(e);
+
+      e.printStackTrace();
+			// System.out.println(e);
+			// throw new RuntimeException(e);
 		}
 		return feedsList;
 	}
