@@ -1,0 +1,10 @@
+table {
+  width: 100%;
+}
+.feedElement {
+  font-family: sans-serif;
+  font-size: 12pt;
+}
+.description {
+  color: darkslategrey;
+}
