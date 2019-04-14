@@ -9,51 +9,71 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @SpringBootApplication
 public class RssAggregatorApplication {
+	
+	//public static boolean threadPool=false;
 
-    public static void main(String[] args) {
-        SpringApplication.run(RssAggregatorApplication.class, args);
+	public static void main(String[] args) {
+		SpringApplication.run(RssAggregatorApplication.class, args);
+		HashSet<FeedsStore> feedsList = new HashSet<FeedsStore>();
 
-
-        List<String> opmlList = new ArrayList<String>();
-		opmlList.add("http://paulirish.github.io/frontend-feeds/frontend-feeds.opml");
-		opmlList.add("https://raw.githubusercontent.com/yasuharu519/opml/master/main.opml");
-		opmlList.add("https://github.com/cudeso/OPML-Security-Feeds/blob/master/feedly.opml");
+		List<String> opmlList = Arrays.asList(Constants.URL1,Constants.URL2,Constants.URL3,Constants.URL4,Constants.URL5);
 
 		OPMLAggregator op = new OPMLAggregator();
 		HashSet<FeedsStore> allFeedsList = op.aggregateOPML(opmlList);
+		//	System.out.println("Finished with all threads in "+(end-start)+"ms");
+		//	System.out.println("Complete");
+
 		//allFeedsList contains all the xmlUrls to be displayed
 
-        List<String> feeds = new ArrayList<>();
-        feeds.add("http://podcasts.joerogan.net/feed");
-        feeds.add("http://feeds.bbci.co.uk/news/rss.xml");
-        feeds.add("http://rss.nytimes.com/services/xml/rss/nyt/World.xml");
+		List<String> feeds = new ArrayList<>();
+		for(FeedsStore feedStore: allFeedsList) {
+			feeds.add(feedStore.getXmlUrl());
+		}
 
-        FeedAggregate feedAggregate = aggregate(feeds);
-    }
+		FeedAggregate feedAggregate = aggregate(feeds);
+	}
 
-    public static FeedAggregate aggregate(List<String> feeds) {
-        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-        FeedAggregate feedAggregate = (FeedAggregate) context.getBean("feedAggregate");
-        List<Thread> threads = new ArrayList<>();
+	public static FeedAggregate aggregate(List<String> feeds) {
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		FeedAggregate feedAggregate = (FeedAggregate) context.getBean("feedAggregate");
+		int n = 100;
+		boolean threadPool=true;
+		if(threadPool) {
+			ExecutorService  exec= Executors.newFixedThreadPool(n);
+			for(String feed:feeds) {
+				Runnable thread = new RSSFeedParser(feed, feedAggregate);
+				exec.execute(thread);
+			}
+			exec.shutdown();
+			while(!exec.isTerminated()) {
 
-        feeds.forEach(feed -> {
-            RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
-            Thread thread = new Thread(parser);
-            threads.add(thread);
-            thread.start();
-        });
+			}
 
-        threads.forEach(thread -> {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+		}
+		else {
+			List<Thread> threads = new ArrayList<>();
 
-        return feedAggregate;
-    }
+			feeds.forEach(feed -> {
+				RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
+				Thread thread = new Thread(parser);
+				threads.add(thread);
+				thread.start();
+			});
+
+			threads.forEach(thread -> {
+				try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			});
+		}
+
+		return feedAggregate;
+	}
 }
