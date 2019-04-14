@@ -27,9 +27,6 @@ public class RssAggregatorApplication {
 		//allFeedsList contains all the xmlUrls to be displayed
 
         List<String> feeds = new ArrayList<>();
-        feeds.add("http://podcasts.joerogan.net/feed");
-        feeds.add("http://feeds.bbci.co.uk/news/rss.xml");
-        feeds.add("http://rss.nytimes.com/services/xml/rss/nyt/World.xml");
 
         FeedAggregate feedAggregate = aggregate(feeds);
     }
