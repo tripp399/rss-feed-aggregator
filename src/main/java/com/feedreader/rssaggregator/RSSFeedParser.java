@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
 
 public class RSSFeedParser implements Runnable {
     private static final String TITLE = "title";
@@ -101,13 +102,14 @@ public class RSSFeedParser implements Runnable {
                         message.setGuid(guid);
                         message.setLink(link);
                         message.setTitle(title);
-//                        feed.getMessages().add(message);
+                        message.setPubDate(pubdate);
                         aggregate.addFeedMessage(message);
                     }
                 }
             }
-        } catch (XMLStreamException e) {
+        } catch (XMLStreamException | RuntimeException | ParseException e) {
             // throw new RuntimeException(e);
+//            e.printStackTrace();
         }
         return feed;
     }
@@ -124,14 +126,13 @@ public class RSSFeedParser implements Runnable {
 
     private InputStream read() {
         try {
-            // return url.openStream();
             URLConnection openConnection = url.openConnection();
             openConnection.addRequestProperty(
-              "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0"
-              );
+                    "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0"
+            );
             return openConnection.getInputStream();
-            // return null;
         } catch (IOException e) {
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

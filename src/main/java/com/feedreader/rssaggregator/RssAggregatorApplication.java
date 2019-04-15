@@ -1,7 +1,7 @@
 package com.feedreader.rssaggregator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,9 +13,12 @@ import com.feedreader.rssaggregator.model.FeedAggregate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 
 @SpringBootApplication
 public class RssAggregatorApplication {
+
+  private static FeedAggregate feedAggregate;
 
   // public static boolean threadPool=false;
 
@@ -27,14 +30,14 @@ public class RssAggregatorApplication {
 
     List<String> feeds = new ArrayList<>();
     try {
-      Scanner scanner = new Scanner(
-          new File("C:/Users/pulki/Academics/Spring-19/CP/Project/rss-feed-aggregator/src/main/resources/feeds.txt"));
+      File file = new ClassPathResource("feeds.txt").getFile();
+      Scanner scanner = new Scanner(file);
 
       while (scanner.hasNextLine()) {
         feeds.add(scanner.nextLine());
       }
       scanner.close();
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
@@ -44,17 +47,17 @@ public class RssAggregatorApplication {
     // feeds.add("http://rss.nytimes.com/services/xml/rss/nyt/World.xml");
     // feeds.add("https://thedatafarm.com/blog/feed/");
 
-    FeedAggregate feedAggregate = aggregate(feeds.subList(0, 50));
+    feedAggregate = aggregate(feeds.subList(0, 50));
 
-    System.out.println("size" + feedAggregate.getAggregatedList().size());
     long aggregatedAt = System.currentTimeMillis();
-    System.out.println(aggregatedAt - finish);
-    System.out.println("### aggregated");
   }
 
   public static FeedAggregate aggregate(List<String> feeds) {
-    ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-    FeedAggregate feedAggregate = (FeedAggregate) context.getBean("feedAggregate");
+    // ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+    // FeedAggregate feedAggregate = (FeedAggregate) context.getBean("feedAggregate");
+    
+    FeedAggregate feedAggregate = new FeedAggregate();
+
     int n = 100;
     boolean threadPool = true;
     if (threadPool) {
@@ -87,6 +90,10 @@ public class RssAggregatorApplication {
       });
     }
 
+    return feedAggregate;
+  }
+
+  public static FeedAggregate getAggregate() {
     return feedAggregate;
   }
 
