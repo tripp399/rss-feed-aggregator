@@ -1,6 +1,7 @@
 package com.feedreader.rssaggregator.controller;
 
 import com.feedreader.rssaggregator.ApplicationContextProvider;
+import com.feedreader.rssaggregator.RssAggregatorApplication;
 import com.feedreader.rssaggregator.model.FeedAggregate;
 import com.feedreader.rssaggregator.model.FeedMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ public class HelloController {
     @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/feeds")
     public List<FeedMessage> getFeedAggregate() {
-        return ((FeedAggregate) ApplicationContextProvider.getApplicationContext().getBean("feedAggregate"))
-                    .getAggregatedList();
+
+        return RssAggregatorApplication.getAggregate().getAggregatedList();
+        // return ((FeedAggregate) ApplicationContextProvider.getApplicationContext().getBean("feedAggregate"))
+        //             .getAggregatedList();
     }
 }

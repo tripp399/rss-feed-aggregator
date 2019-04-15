@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
-    @Bean
-    public FeedAggregate feedAggregate() {
-        return new FeedAggregate();
-    }
+    // @Bean
+    // public FeedAggregate feedAggregate() {
+    //     return new FeedAggregate();
+    // }
 }
