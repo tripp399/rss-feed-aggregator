@@ -1,12 +1,20 @@
 package com.feedreader.rssaggregator.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class FeedMessage {
+
+    private static final DateFormat PUBDATE_FORMATTER = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
 
     String title;
     String description;
     String link;
     String author;
     String guid;
+    Date pubDate;
 
     public String getTitle() {
         return title;
@@ -46,6 +54,14 @@ public class FeedMessage {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public Date getPubDate() {
+        return pubDate;
+    }
+
+    public void setPubDate(String pubDate) throws ParseException {
+        this.pubDate = PUBDATE_FORMATTER.parse(pubDate);
     }
 
     @Override

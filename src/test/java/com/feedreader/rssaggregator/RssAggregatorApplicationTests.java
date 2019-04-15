@@ -1,6 +1,7 @@
 package com.feedreader.rssaggregator;
 
 import com.feedreader.rssaggregator.model.FeedAggregate;
+import com.feedreader.rssaggregator.model.FeedMessage;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,10 +14,7 @@ import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 import static com.feedreader.rssaggregator.RssAggregatorApplication.aggregate;
 
@@ -34,7 +32,6 @@ public class RssAggregatorApplicationTests {
     try {
       File file = new ClassPathResource("feeds.txt").getFile();
       Scanner scanner = new Scanner(file);
-
       while (scanner.hasNextLine()) {
         feeds.add(scanner.nextLine());
       }
@@ -50,8 +47,8 @@ public class RssAggregatorApplicationTests {
 
   @Test
   public void feedAggregateIsNotEmpty() {
-    int length = 5;
-    int index = random.nextInt(600);
+    int length = 20;
+    int index = random.nextInt(550);
     FeedAggregate feedAggregate = aggregate(feeds.subList(index, index + length));
 
     Assert.notEmpty(feedAggregate.getAggregatedList(), "List is Empty");
@@ -75,13 +72,30 @@ public class RssAggregatorApplicationTests {
 
   @Test
   public void feedAggregateSizeIsConsistent() {
-    int length = random.nextInt(50);
-    int index = random.nextInt(550);
+    int length = random.nextInt(20);
 
-    int size1 = aggregate(feeds.subList(index, index + length)).getAggregatedList().size();
-    int size2 = aggregate(feeds.subList(index, index + length)).getAggregatedList().size();
+    for (int i = 0; i < 3; i++) {
+      int index = random.nextInt(550);
+//      System.out.println("index: " + index);
+      int size1 = aggregate(feeds.subList(index, index + length)).getAggregatedList().size();
+      int size2 = aggregate(feeds.subList(index, index + length)).getAggregatedList().size();
 
-    Assert.isTrue(size1 == size2, "aggregated size is not consistent");
+      Assert.isTrue(size1 == size2, "aggregated size is not consistent");
+    }
+  }
+
+  @Test
+  public void feedAggregateIsOrderedByDate() {
+    int length = 10;
+    int index = random.nextInt(600);
+
+    List<FeedMessage> feedMessages = aggregate(feeds.subList(index, index + length)).getAggregatedList();
+
+    for (int i = 0; i < feedMessages.size() - 1; i++) {
+      Date d1 = feedMessages.get(i).getPubDate();
+      Date d2 = feedMessages.get(i+1).getPubDate();
+      Assert.isTrue( d1.compareTo(d2) <= 0 , "Messages out of order");
+    }
   }
 
 }
