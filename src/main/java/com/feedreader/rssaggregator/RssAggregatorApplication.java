@@ -2,7 +2,6 @@ package com.feedreader.rssaggregator;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,7 +10,6 @@ import java.util.concurrent.*;
 import com.feedreader.rssaggregator.model.FeedAggregate;
 
 import com.feedreader.rssaggregator.util.RSSFeedParser;
-import com.feedreader.rssaggregator.util.SyndFeedParser;
 import com.rometools.rome.feed.synd.SyndFeed;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -58,7 +56,7 @@ public class RssAggregatorApplication {
 //            exec.submit(thread);
             Callable<SyndFeed> thread = null;
 //            try {
-////                thread = new SyndFeedParser(feed, feedAggregate);
+////                thread = new QueueSyndFeedParser(feed, feedAggregate);
 //            } catch (MalformedURLException e) {
 //                e.printStackTrace();
 //            }

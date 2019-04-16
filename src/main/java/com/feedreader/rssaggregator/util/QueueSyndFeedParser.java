@@ -11,12 +11,12 @@ import java.net.URL;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
-public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
+public class QueueSyndFeedParser implements Runnable, Callable<SyndFeed> {
 
     private final URL url;
     private final BlockingQueue<FeedMessage> queue;
 
-    public SyndFeedParser(String url, BlockingQueue<FeedMessage> queue) throws MalformedURLException {
+    public QueueSyndFeedParser(String url, BlockingQueue<FeedMessage> queue) throws MalformedURLException {
         this.url = new URL(url);
         this.queue = queue;
     }

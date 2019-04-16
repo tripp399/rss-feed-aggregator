@@ -1,7 +1,7 @@
 package com.feedreader.rssaggregator.tasks;
 
 import com.feedreader.rssaggregator.model.FeedMessage;
-import com.feedreader.rssaggregator.util.SyndFeedParser;
+import com.feedreader.rssaggregator.util.QueueSyndFeedParser;
 
 import java.net.MalformedURLException;
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FeedScanner {
+public class FeedScanner implements Runnable{
     private Set<String> urls = new ConcurrentSkipListSet<>();
     private ExecutorService executorService = Executors.newCachedThreadPool();
     private BlockingQueue<FeedMessage> queue;
@@ -20,6 +20,7 @@ public class FeedScanner {
     }
 
     public void addSource(String url) {
+        // TODO: Check valid url either here or somwhere else
         urls.add(url);
     }
 
@@ -31,6 +32,11 @@ public class FeedScanner {
         for(String url: this.urls){
             executorService.submit(new ScanSource(url, this.queue));
         }
+    }
+
+    @Override
+    public void run() {
+        startScanner();
     }
 
     class ScanSource implements Runnable{
@@ -45,7 +51,7 @@ public class FeedScanner {
         @Override
         public void run() {
             try {
-                SyndFeedParser parser = new SyndFeedParser(url, queue);
+                QueueSyndFeedParser parser = new QueueSyndFeedParser(url, queue);
                 parser.call();
             } catch (MalformedURLException e) {
                 System.out.println("[FeedScanner] URL "+this.url+"is malformed!");
