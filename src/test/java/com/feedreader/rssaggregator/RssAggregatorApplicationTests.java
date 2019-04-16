@@ -2,6 +2,7 @@ package com.feedreader.rssaggregator;
 
 import com.feedreader.rssaggregator.model.FeedAggregate;
 import com.feedreader.rssaggregator.model.FeedMessage;
+import com.rometools.rome.feed.synd.SyndEntry;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.*;
 
 import static com.feedreader.rssaggregator.RssAggregatorApplication.aggregate;
@@ -30,7 +32,7 @@ public class RssAggregatorApplicationTests {
     random = new Random();
     feeds = new ArrayList<>();
     try {
-      File file = new ClassPathResource("validFeeds.txt").getFile();
+      File file = new ClassPathResource("feeds.txt").getFile();
       Scanner scanner = new Scanner(file);
       while (scanner.hasNextLine()) {
         feeds.add(scanner.nextLine());
@@ -46,66 +48,65 @@ public class RssAggregatorApplicationTests {
   }
 
   @Test
-  public void feedAggregateIsNotEmpty() {
+  public void feedAggregateIsNotEmpty() throws MalformedURLException {
 
-    int length = 20;
-    int index = random.nextInt(350);
+//    int length = 50;
+//    int index = random.nextInt(300);
     System.out.println("starting");
     long start = System.currentTimeMillis();
-    FeedAggregate feedAggregate = aggregate(feeds.subList(index, index + length), 20);
+//    FeedAggregate feedAggregate = aggregate(feeds.subList(index, index + length), 20);
+    FeedAggregate feedAggregate = aggregate(feeds, 20);
     long finish = System.currentTimeMillis();
     System.out.println(finish - start);
     System.out.println(feedAggregate.getAggregatedList().size());
-
-    for (FeedMessage message : feedAggregate.getAggregatedList()) {
-      Assert.isTrue(null != message.getLink() || !message.getLink().isEmpty(),
-              "link is null or empty");
-    }
 
     Assert.notEmpty(feedAggregate.getAggregatedList(), "List is Empty");
   }
 
   @Test
-  public void feedMessageLinkIsNotEmpty() {
+  public void feedMessageLinkIsNotEmpty() throws MalformedURLException {
 
     int length = 20;
     int index = random.nextInt(350);
     System.out.println("starting");
     long start = System.currentTimeMillis();
-    FeedAggregate feedAggregate = aggregate(feeds.subList(index, index + length), 20);
+//    FeedAggregate feedAggregate = aggregate(feeds.subList(index, index + length), 20);
+    FeedAggregate feedAggregate = aggregate(feeds, 20);
     long finish = System.currentTimeMillis();
     System.out.println(finish - start);
     System.out.println(feedAggregate.getAggregatedList().size());
 
-    for (FeedMessage message : feedAggregate.getAggregatedList()) {
-      Assert.isTrue(null != message.getLink() || !message.getLink().isEmpty(),
+    for (SyndEntry entry: (List<SyndEntry>) feedAggregate.getAggregatedList()) {
+      Assert.isTrue(null != entry.getLink() || ! entry.getLink().isEmpty(),
               "link is null or empty");
     }
 
-    Assert.notEmpty(feedAggregate.getAggregatedList(), "List is Empty");
+//    for (FeedMessage message : (List<FeedMessage>) feedAggregate.getAggregatedList()) {
+//      Assert.isTrue(null != message.getLink() || !message.getLink().isEmpty(),
+//              "link is null or empty");
+//    }
   }
 
   @Test
-  public void feedAggregateContainsAllMessages() {
+  public void feedAggregateContainsAllMessages() throws MalformedURLException {
     int sum = 0;
     do {
       int length = 1;
       int index = random.nextInt(350);
       int[] size = new int[4];
 
-
       for (int i = index, j = 0; j < 3; i = i + length, j++) {
         size[j] = aggregate(feeds.subList(i, i + length), 20).getAggregatedList().size();
         sum += size[j];
       }
-      size[3] = aggregate(feeds.subList(index, index + 3 * length)).getAggregatedList().size();
+      size[3] = aggregate(feeds.subList(index, index + 3 * length), 20).getAggregatedList().size();
 
       Assert.isTrue(sum == size[3], "Aggregate size not consistent");
     } while(sum == 0);
   }
 
   @Test
-  public void feedAggregateSizeIsConsistent() {
+  public void feedAggregateSizeIsConsistent() throws MalformedURLException {
       int size1, size2;
       do {
         int index = random.nextInt(350);
@@ -122,7 +123,7 @@ public class RssAggregatorApplicationTests {
 
   @Ignore
   @Test
-  public void feedAggregateIsOrderedByDate() {
+  public void feedAggregateIsOrderedByDate() throws MalformedURLException {
     int length = 10;
     int index = random.nextInt(350);
 
@@ -137,7 +138,7 @@ public class RssAggregatorApplicationTests {
 
   @Ignore
   @Test
-  public void threadPoolScalabilityMeasurement() {
+  public void threadPoolScalabilityMeasurement() throws MalformedURLException {
 
     List<Long> aggregationTimes = new ArrayList<>();
     final long start = System.currentTimeMillis();

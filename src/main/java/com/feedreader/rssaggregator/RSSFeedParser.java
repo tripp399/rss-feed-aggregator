@@ -30,7 +30,7 @@ public class RSSFeedParser implements Runnable, Callable<String> {
     private static final String PUB_DATE = "pubDate";
     private static final String GUID = "guid";
 
-    static AtomicInteger count = new AtomicInteger(0);
+//    static AtomicInteger count = new AtomicInteger(0);
     private final URL url;
     private FeedAggregate aggregate;
 
@@ -112,9 +112,9 @@ public class RSSFeedParser implements Runnable, Callable<String> {
             }
         } catch (XMLStreamException | RuntimeException | ParseException e) {
             // throw new RuntimeException(e);
-            e.printStackTrace();
-            count.getAndIncrement();
-            System.out.println(count);
+//            e.printStackTrace();
+//            count.getAndIncrement();
+//            System.out.println(count);
         }
         String url_string = url.getProtocol() + "://" + url.getHost() + url.getPath();
         return url_string;

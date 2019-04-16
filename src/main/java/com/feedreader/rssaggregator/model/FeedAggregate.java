@@ -4,23 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class FeedAggregate {
+public class FeedAggregate<T> {
 
-    private final List<FeedMessage> aggregatedList;
+    private final List<T> aggregatedList;
 
     public FeedAggregate() {
-        aggregatedList = new CopyOnWriteArrayList<>();
+//        aggregatedList = new CopyOnWriteArrayList<>();
+        aggregatedList = new ArrayList<>();
     }
 
-    public List<FeedMessage> getAggregatedList() {
+    public List<T> getAggregatedList() {
         return aggregatedList;
     }
 
-    public void addFeedMessage(FeedMessage message) {
+    public synchronized void addFeedMessage(T message) {
         aggregatedList.add(message);
     }
 
-    public FeedMessage getLastMessage() {
+    public T getLastMessage() {
         return aggregatedList.get(aggregatedList.size() - 1);
     }
 }

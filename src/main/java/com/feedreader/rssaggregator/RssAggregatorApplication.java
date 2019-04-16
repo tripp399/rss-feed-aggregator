@@ -2,14 +2,17 @@ package com.feedreader.rssaggregator;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import com.feedreader.rssaggregator.model.FeedAggregate;
 
+import com.feedreader.rssaggregator.util.SyndFeedParser;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndFeed;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -44,14 +47,28 @@ public class RssAggregatorApplication {
     feedAggregate = aggregate(feeds.subList(0, 50));
   }
 
-    public static FeedAggregate aggregate(List<String> feeds, int poolSize) {
-        FeedAggregate feedAggregate = new FeedAggregate();
+    public static FeedAggregate aggregate(List<String> feeds, int poolSize) throws MalformedURLException {
+        FeedAggregate feedAggregate = new FeedAggregate<>();
 
         ExecutorService exec = Executors.newFixedThreadPool(poolSize);
+        List<Future<SyndFeed>> futures = new ArrayList<>();
         for (String feed : feeds) {
-            Runnable thread = new RSSFeedParser(feed, feedAggregate);
-            exec.submit(thread);
+//            Runnable thread = new RSSFeedParser(feed, feedAggregate);
+//            exec.submit(thread);
+            Callable<SyndFeed> thread = new SyndFeedParser(feed, feedAggregate);
+            futures.add(exec.submit(thread));
         }
+
+//        futures.forEach(future -> {
+//            try {
+//                if (null != future.get()) {
+//                    feedAggregate.getAggregatedList()
+//                            .addAll(future.get().getEntries());
+//                }
+//            } catch (InterruptedException | ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//        });
         exec.shutdown();
         while (!exec.isTerminated()) {
 

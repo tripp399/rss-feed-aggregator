@@ -186,7 +186,6 @@ http://www.sqlservercentral.com/Forums/RssFeed392-0-0-1.aspx
 http://www.sqlservercentral.com/Forums/RssFeed19-0-0-1.aspx
 http://r7kamura.hatenablog.com/feed
 https://blog.asana.com/feed/
-!
 http://blogs.msdn.com/clrteam/rss.xml
 https://blog.oz-code.com/feed/
 https://www.ctl.io/developers/blog/rss
@@ -204,7 +203,6 @@ http://blog.codeship.com/feed/
 http://www.sqlservercentral.com/Forums/RssFeed266-0-0-1.aspx
 https://medium.com/feed/airbnb-engineering
 https://code.blender.org/rss
-http://www.strnet.com/feed
 http://www.sqlservercentral.com/Forums/RssFeed6-0-0-1.aspx
 http://www.sqlservercentral.com/Forums/RssFeed23-0-0-1.aspx
 http://ssig33.com/feed
@@ -265,7 +263,6 @@ http://feeds.bbci.co.uk/news/education/rss.xml
 http://feeds.bbci.co.uk/news/science_and_environment/rss.xml
 http://feeds.bbci.co.uk/news/technology/rss.xml
 http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml
-http://feeds.bbci.co.uk/news/system/latest_published_content/rss.xml
 http://feeds.reuters.com/reuters/topNews
 http://feeds.reuters.com/news/artsculture
 http://feeds.reuters.com/reuters/businessNews
@@ -348,13 +345,6 @@ http://www.theatlantic.com/feed/channel/national/
 http://www.theatlantic.com/feed/channel/science/
 http://www.theatlantic.com/feed/channel/education/
 http://www.theatlantic.com/feed/channel/news/
-http://www.economist.com/sections/business-finance/rss.xml
-http://www.economist.com/sections/economics/rss.xml
-http://www.economist.com/sections/science-technology/rss.xml
-http://www.economist.com/sections/culture/rss.xml
-http://www.economist.com/sections/united-states/rss.xml
-http://www.economist.com/sections/middle-east-africa/rss.xml
-http://www.economist.com/sections/international/rss.xml
 http://www.cbsnews.com/latest/rss/us
 http://www.cbsnews.com/latest/rss/tech
 http://www.cbsnews.com/latest/rss/world
