@@ -1,13 +1,14 @@
 package com.feedreader.rssaggregator;
 
 import com.feedreader.rssaggregator.util.Constants;
+import com.feedreader.rssaggregator.util.OPMLAggregator;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.feedreader.rssaggregator.util.OPMLAggregator;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 public class OPMLParserTest {
 

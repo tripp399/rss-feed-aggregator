@@ -3,7 +3,6 @@ package com.feedreader.rssaggregator.tasks;
 import com.feedreader.rssaggregator.model.FeedMessage;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.concurrent.*;
 
 import static org.junit.Assert.*;
@@ -24,7 +23,7 @@ public class FeedScannerTest {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
         FeedScanner scanner = new FeedScanner(queue);
-        scanner.addSource("http://feeds.feedburner.com/TellDontAsk");
+        scanner.addSource("http://www.sqlservercentral.com/Forums/RssFeed148-0-0-1.aspx");
         exec.scheduleAtFixedRate(scanner, 1, 10, TimeUnit.SECONDS);
 
         int first = 0;

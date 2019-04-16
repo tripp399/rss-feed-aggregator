@@ -3,10 +3,11 @@ package com.feedreader.rssaggregator.tasks;
 import com.feedreader.rssaggregator.model.FeedMessage;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class FeedAggregatorTest {
 
@@ -22,7 +23,7 @@ public class FeedAggregatorTest {
         exec.scheduleWithFixedDelay(aggregator, 1, 5, TimeUnit.SECONDS);
         Thread.sleep(3000);
 
-        TreeSet<FeedMessage> messages = aggregator.getByPubDate();
+        List<FeedMessage> messages = aggregator.getByPubDate();
         for(FeedMessage message: messages){
             System.out.println(message.getPubDate());
         }
@@ -42,14 +43,16 @@ public class FeedAggregatorTest {
         FeedAggregator aggregator = new FeedAggregator(queue);
         exec.scheduleWithFixedDelay(aggregator, 1, 1, TimeUnit.SECONDS);
         Thread.sleep(500);
-        TreeSet<FeedMessage> messages = aggregator.getByPubDate();
+        List<FeedMessage> messages = aggregator.getByPubDate();
+        int prevSize = messages.size();
         System.out.println("-----FIRST CALL----");;
         System.out.println(messages.size());
         Thread.sleep(2000);
         System.out.println("---SECOND CALL---");
-        TreeSet<FeedMessage> newerMessages = aggregator.getByPubDate();
+        List<FeedMessage> newerMessages = aggregator.getByPubDate();
+        int thisSize = newerMessages.size();
         System.out.println(newerMessages.size());
-        assertTrue(newerMessages.size() > messages.size());
+        assertTrue(thisSize > prevSize);
     }
 
     @Test
@@ -59,12 +62,12 @@ public class FeedAggregatorTest {
         FeedScanner scanner = new FeedScanner(queue);
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
-        exec.scheduleAtFixedRate(scanner, 1, 30, TimeUnit.SECONDS);
+        exec.scheduleAtFixedRate(scanner, 1, 20, TimeUnit.SECONDS);
         FeedAggregator aggregator = new FeedAggregator(queue);
         exec.scheduleWithFixedDelay(aggregator, 1, 5, TimeUnit.SECONDS);
         Thread.sleep(3000);
 
-        TreeSet<FeedMessage> messages = aggregator.getByPubDate();
+        List<FeedMessage> messages = aggregator.getByPubDate();
         assertTrue(messages.size() > 0);
         FeedMessage prev = null;
         for(FeedMessage message: messages){

@@ -2,6 +2,7 @@ package com.feedreader.rssaggregator.tasks;
 
 import com.feedreader.rssaggregator.model.FeedMessage;
 import com.feedreader.rssaggregator.util.QueueSyndFeedParser;
+import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 import java.util.Set;
@@ -58,5 +59,9 @@ public class FeedScanner implements Runnable{
                 e.printStackTrace();
             }
         }
+    }
+
+    public BlockingQueue<FeedMessage> getQueue() {
+        return queue;
     }
 }
