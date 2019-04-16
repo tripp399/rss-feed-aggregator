@@ -6,8 +6,8 @@ import { FeedAggregate } from '../feed-aggregate';
 import { FeedMessage } from '../feed-message';
 
 const testAggregateList = [
-  { title: 'Title 1', description: 'Description 1', link: 'http://podcasts.joerogan.net/feed', author: 'Author 1', guid: 'guid 1' },
-  { title: 'Title 2', description: 'Description 2', link: 'http://rss.nytimes.com/services/xml/rss/nyt/World.xml', author: 'Author 2', guid: 'guid 2' }
+  { title: 'Title 1', description: 'Description 1', link: 'http://podcasts.joerogan.net/feed', author: 'Author 1', pubDate: new Date() },
+  { title: 'Title 2', description: 'Description 2', link: 'http://rss.nytimes.com/services/xml/rss/nyt/World.xml', author: 'Author 2', pubDate: new Date() }
 ];
 
 @Component({

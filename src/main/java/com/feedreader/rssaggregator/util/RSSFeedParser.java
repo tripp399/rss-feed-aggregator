@@ -1,4 +1,4 @@
-package com.feedreader.rssaggregator;
+package com.feedreader.rssaggregator.util;
 
 import com.feedreader.rssaggregator.model.Feed;
 import com.feedreader.rssaggregator.model.FeedAggregate;
@@ -15,8 +15,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class RSSFeedParser implements Runnable {
+public class RSSFeedParser implements Runnable, Callable<String> {
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     //    private static final String CHANNEL = "channel";
@@ -28,6 +30,7 @@ public class RSSFeedParser implements Runnable {
     private static final String PUB_DATE = "pubDate";
     private static final String GUID = "guid";
 
+//    static AtomicInteger count = new AtomicInteger(0);
     private final URL url;
     private FeedAggregate aggregate;
 
@@ -40,7 +43,7 @@ public class RSSFeedParser implements Runnable {
         }
     }
 
-    public Feed readFeed() {
+    public String readFeed() {
         Feed feed = null;
         try {
             boolean isFeedHeader = true;
@@ -110,8 +113,11 @@ public class RSSFeedParser implements Runnable {
         } catch (XMLStreamException | RuntimeException | ParseException e) {
             // throw new RuntimeException(e);
 //            e.printStackTrace();
+//            count.getAndIncrement();
+//            System.out.println(count);
         }
-        return feed;
+        String url_string = url.getProtocol() + "://" + url.getHost() + url.getPath();
+        return url_string;
     }
 
     private String getCharacterData(XMLEventReader eventReader)
@@ -140,5 +146,10 @@ public class RSSFeedParser implements Runnable {
     @Override
     public void run() {
         readFeed();
+    }
+
+    @Override
+    public String call() {
+        return readFeed();
     }
 }

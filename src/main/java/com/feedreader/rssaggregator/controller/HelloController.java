@@ -23,7 +23,7 @@ public class HelloController {
     @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/feeds")
     public List<FeedMessage> getFeedAggregate() {
-
+        System.out.println("get feeds");
         return RssAggregatorApplication.getAggregate().getAggregatedList();
         // return ((FeedAggregate) ApplicationContextProvider.getApplicationContext().getBean("feedAggregate"))
         //             .getAggregatedList();

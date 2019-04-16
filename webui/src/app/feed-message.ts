@@ -3,5 +3,5 @@ export class FeedMessage {
   description: string;
   link: string;
   author: string;
-  guid: string;
+  pubDate: Date;
 }
