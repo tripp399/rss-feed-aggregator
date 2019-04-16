@@ -8,9 +8,9 @@ import java.util.*;
 import com.feedreader.rssaggregator.model.FeedsStore;
 
 public class OPMLAggregator {
-	
-	public HashSet<FeedsStore> aggregateOPML(List<String> opmlList){
-		HashSet<FeedsStore> feedsList = new HashSet<FeedsStore>();
+
+	public HashSet<String> aggregateOPML(List<String> opmlList){
+		HashSet<String> feedsList = new HashSet<>();
 		List<Thread> threads = new ArrayList<>();
 
 		opmlList.forEach(opml -> {
@@ -22,36 +22,14 @@ public class OPMLAggregator {
 
 		threads.forEach(thread -> {
 			try {
-				thread.join(15000);
+				thread.join(25000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
     });
-    
-    writeToFile(
-      "C:/Users/pulki/Academics/Spring-19/CP/Project/rss-feed-aggregator/src/main/resources/feeds.txt", 
-      feedsList
-    );
 
 		return feedsList;
-		
-  }
-  
-  private boolean writeToFile(String filePath, HashSet<FeedsStore> feedsSet) {
-    try {
-      FileWriter w = new FileWriter(filePath);
 
-      PrintWriter writer = new PrintWriter(w);
-
-      for (FeedsStore feedStore : feedsSet) {
-        writer.println(feedStore.getXmlUrl());
-      }
-      writer.close();
-      return true;
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
-    }
   }
 
 }

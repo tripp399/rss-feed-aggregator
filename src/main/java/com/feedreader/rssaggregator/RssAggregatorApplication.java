@@ -20,11 +20,8 @@ public class RssAggregatorApplication {
 
   private static FeedAggregate feedAggregate;
 
-  // public static boolean threadPool=false;
-
   public static void main(String[] args) {
     SpringApplication.run(RssAggregatorApplication.class, args);
-    // HashSet<FeedsStore> feedsList = new HashSet<FeedsStore>();
     System.out.println("Starting...");
     long start = System.currentTimeMillis();
 
@@ -44,57 +41,50 @@ public class RssAggregatorApplication {
     long finish = System.currentTimeMillis();
     System.out.println(finish - start);
 
-    // feeds.add("http://rss.nytimes.com/services/xml/rss/nyt/World.xml");
-    // feeds.add("https://thedatafarm.com/blog/feed/");
-
     feedAggregate = aggregate(feeds.subList(0, 50));
-
-    long aggregatedAt = System.currentTimeMillis();
   }
 
-  public static FeedAggregate aggregate(List<String> feeds) {
-    // ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-    // FeedAggregate feedAggregate = (FeedAggregate) context.getBean("feedAggregate");
-    
-    FeedAggregate feedAggregate = new FeedAggregate();
+    public static FeedAggregate aggregate(List<String> feeds, int poolSize) {
+        FeedAggregate feedAggregate = new FeedAggregate();
 
-    int n = 100;
-    boolean threadPool = true;
-    if (threadPool) {
-      ExecutorService exec = Executors.newFixedThreadPool(n);
-      for (String feed : feeds) {
-        Runnable thread = new RSSFeedParser(feed, feedAggregate);
-        exec.execute(thread);
-      }
-      exec.shutdown();
-      while (!exec.isTerminated()) {
-
-      }
-
-    } else {
-      List<Thread> threads = new ArrayList<>();
-
-      feeds.forEach(feed -> {
-        RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
-        Thread thread = new Thread(parser);
-        threads.add(thread);
-        thread.start();
-      });
-
-      threads.forEach(thread -> {
-        try {
-          thread.join();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+        ExecutorService exec = Executors.newFixedThreadPool(poolSize);
+        for (String feed : feeds) {
+            Runnable thread = new RSSFeedParser(feed, feedAggregate);
+            exec.submit(thread);
         }
-      });
+        exec.shutdown();
+        while (!exec.isTerminated()) {
+
+        }
+
+        return feedAggregate;
     }
 
-    return feedAggregate;
-  }
+    public static FeedAggregate aggregate(List<String> feeds) {
 
-  public static FeedAggregate getAggregate() {
-    return feedAggregate;
-  }
+        FeedAggregate feedAggregate = new FeedAggregate();
+        List<Thread> threads = new ArrayList<>();
+
+        feeds.forEach(feed -> {
+            RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
+            Thread thread = new Thread(parser);
+            threads.add(thread);
+            thread.start();
+        });
+
+        threads.forEach(thread -> {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return feedAggregate;
+    }
+
+    public static FeedAggregate getAggregate() {
+        return feedAggregate;
+    }
 
 }
