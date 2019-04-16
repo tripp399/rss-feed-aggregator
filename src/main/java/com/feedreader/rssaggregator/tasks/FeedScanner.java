@@ -1,8 +1,7 @@
 package com.feedreader.rssaggregator.tasks;
 
 import com.feedreader.rssaggregator.model.FeedMessage;
-import com.feedreader.rssaggregator.util.QueueSyndFeedParser;
-import org.springframework.stereotype.Component;
+import com.feedreader.rssaggregator.util.SyndFeedParser;
 
 import java.net.MalformedURLException;
 import java.util.Set;
@@ -52,7 +51,8 @@ public class FeedScanner implements Runnable{
         @Override
         public void run() {
             try {
-                QueueSyndFeedParser parser = new QueueSyndFeedParser(url, queue);
+                MyBlockingQueue<FeedMessage> myBlockingQueue = new MyBlockingQueue<>(this.queue);
+                SyndFeedParser parser = new SyndFeedParser(url, myBlockingQueue);
                 parser.call();
             } catch (MalformedURLException e) {
                 System.out.println("[FeedScanner] URL "+this.url+"is malformed!");

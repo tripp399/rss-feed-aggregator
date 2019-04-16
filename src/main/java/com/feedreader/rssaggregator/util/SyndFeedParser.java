@@ -1,4 +1,5 @@
 package com.feedreader.rssaggregator.util;
+
 import com.feedreader.rssaggregator.model.FeedMessage;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -9,17 +10,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
-public class QueueSyndFeedParser implements Runnable, Callable<SyndFeed> {
+public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
 
     private final URL url;
-    private final BlockingQueue<FeedMessage> queue;
+    private final Container<FeedMessage> container;
 
-    public QueueSyndFeedParser(String url, BlockingQueue<FeedMessage> queue) throws MalformedURLException {
+    public SyndFeedParser(String url, Container<FeedMessage> container) throws MalformedURLException {
         this.url = new URL(url);
-        this.queue = queue;
+        this.container = container;
     }
 
     private SyndFeed parse() {
@@ -28,8 +28,6 @@ public class QueueSyndFeedParser implements Runnable, Callable<SyndFeed> {
 //            System.out.println("[QueuedSyndParser]Parsing "+url+" now....");
             feed = new SyndFeedInput().build(new XmlReader(url));
 
-            int success = 0;
-            int errors = 0;
             feed.getEntries().forEach(entry -> {
                 if(entry.getPublishedDate() == null){
                     entry.setPublishedDate(new Date());
@@ -39,11 +37,7 @@ public class QueueSyndFeedParser implements Runnable, Callable<SyndFeed> {
                         entry.getLink(),
                         entry.getAuthor(),
                         entry.getPublishedDate());
-                try {
-                    this.queue.put(fm);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                this.container.add(fm);
             });
             System.out.println("[QueuedSyndParser]Done Parsing "+url+" | Entries:"+feed.getEntries().size());
 

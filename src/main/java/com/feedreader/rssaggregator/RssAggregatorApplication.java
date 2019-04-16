@@ -1,6 +1,7 @@
 package com.feedreader.rssaggregator;
 
-import com.feedreader.rssaggregator.tasks.FeedAggregator;
+import com.feedreader.rssaggregator.model.FeedAggregate;
+import com.feedreader.rssaggregator.tasks.BlockingQueueFeedAggregator;
 import com.feedreader.rssaggregator.tasks.FeedScanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 public class RssAggregatorApplication {
+
+      private static FeedAggregate feedAggregate;
 
     public static void main(String[] args){
         // Start sping application
@@ -43,7 +46,7 @@ public class RssAggregatorApplication {
             scanner.addSource(feeds.get(i));
         }
 
-        FeedAggregator aggregator = (FeedAggregator)ApplicationContextProvider.getApplicationContext().getBean("feedAggregator");
+        BlockingQueueFeedAggregator aggregator = (BlockingQueueFeedAggregator)ApplicationContextProvider.getApplicationContext().getBean("feedAggregator");
 
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
@@ -54,7 +57,6 @@ public class RssAggregatorApplication {
         executorService.submit(aggregator);
     }
 
-//  private static FeedAggregate feedAggregate;
 //
 //  public static void main(String[] args) {
 //    SpringApplication.run(RssAggregatorApplication.class, args);
@@ -82,66 +84,5 @@ public class RssAggregatorApplication {
 //
 //  }
 
-//    public static FeedAggregate aggregate(List<String> feeds, int poolSize) {
-//        FeedAggregate feedAggregate = new FeedAggregate<>();
-//
-//        ExecutorService exec = Executors.newFixedThreadPool(poolSize);
-//        List<Future<SyndFeed>> futures = new ArrayList<>();
-//        for (String feed : feeds) {
-////            Runnable thread = new RSSFeedParser(feed, feedAggregate);
-////            exec.submit(thread);
-//            Callable<SyndFeed> thread = null;
-////            try {
-//////                thread = new QueueSyndFeedParser(feed, feedAggregate);
-////            } catch (MalformedURLException e) {
-////                e.printStackTrace();
-////            }
-//            futures.add(exec.submit(thread));
-//        }
-//
-////        futures.forEach(future -> {
-////            try {
-////                if (null != future.get()) {
-////                    feedAggregate.getAggregatedList()
-////                            .addAll(future.get().getEntries());
-////                }
-////            } catch (InterruptedException | ExecutionException e) {
-////                e.printStackTrace();
-////            }
-////        });
-//        exec.shutdown();
-//        while (!exec.isTerminated()) {
-//
-//        }
-//
-//        return feedAggregate;
-//    }
-//
-//    public static FeedAggregate aggregate(List<String> feeds) {
-//
-//        FeedAggregate feedAggregate = new FeedAggregate();
-//        List<Thread> threads = new ArrayList<>();
-//
-//        feeds.forEach(feed -> {
-//            RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
-//            Thread thread = new Thread(parser);
-//            threads.add(thread);
-//            thread.start();
-//        });
-//
-//        threads.forEach(thread -> {
-//            try {
-//                thread.join();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        return feedAggregate;
-//    }
-//
-//    public static FeedAggregate getAggregate() {
-//        return feedAggregate;
-//    }
 
 }

@@ -3,9 +3,10 @@ package com.feedreader.rssaggregator.model;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
-public class FeedMessage {
+public class FeedMessage implements Comparable{
 
     private static final DateFormat PUBDATE_FORMATTER = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
 
@@ -82,4 +83,22 @@ public class FeedMessage {
                 + "]";
     }
 
+    @Override
+    public int compareTo(Object o) {
+        FeedMessage message = (FeedMessage)o;
+        if (this.equals(message))
+            return 0;
+        else
+            return this.getPubDate().compareTo(message.getPubDate());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FeedMessage message = (FeedMessage)obj;
+        if (this.getTitle().equals(message.getTitle())
+                && this.getPubDate().equals(message.getPubDate())) {
+            return true;
+        }
+        else return false;
+    }
 }

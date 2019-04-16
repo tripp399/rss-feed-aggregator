@@ -9,7 +9,7 @@ import java.util.concurrent.*;
 
 import static org.junit.Assert.assertTrue;
 
-public class FeedAggregatorTest {
+public class BlockingQueueFeedAggregatorTest {
 
     @Test
     public void processQueue() throws InterruptedException {
@@ -19,11 +19,11 @@ public class FeedAggregatorTest {
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
         exec.scheduleAtFixedRate(scanner, 1, 30, TimeUnit.SECONDS);
-        FeedAggregator aggregator = new FeedAggregator(queue);
+        BlockingQueueFeedAggregator aggregator = new BlockingQueueFeedAggregator(queue);
         exec.scheduleWithFixedDelay(aggregator, 1, 5, TimeUnit.SECONDS);
         Thread.sleep(3000);
 
-        List<FeedMessage> messages = aggregator.getByPubDate();
+        TreeSet<FeedMessage> messages = aggregator.getByPubDate();
         for(FeedMessage message: messages){
             System.out.println(message.getPubDate());
         }
@@ -40,16 +40,16 @@ public class FeedAggregatorTest {
         scanner.addSource(url);
         scanner.addSource(url2);
         exec.scheduleAtFixedRate(scanner, 1, 1, TimeUnit.SECONDS);
-        FeedAggregator aggregator = new FeedAggregator(queue);
+        BlockingQueueFeedAggregator aggregator = new BlockingQueueFeedAggregator(queue);
         exec.scheduleWithFixedDelay(aggregator, 1, 1, TimeUnit.SECONDS);
         Thread.sleep(500);
-        List<FeedMessage> messages = aggregator.getByPubDate();
+        TreeSet<FeedMessage> messages = aggregator.getByPubDate();
         int prevSize = messages.size();
         System.out.println("-----FIRST CALL----");;
         System.out.println(messages.size());
         Thread.sleep(2000);
         System.out.println("---SECOND CALL---");
-        List<FeedMessage> newerMessages = aggregator.getByPubDate();
+        TreeSet<FeedMessage> newerMessages = aggregator.getByPubDate();
         int thisSize = newerMessages.size();
         System.out.println(newerMessages.size());
         assertTrue(thisSize > prevSize);
@@ -63,11 +63,11 @@ public class FeedAggregatorTest {
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
         exec.scheduleAtFixedRate(scanner, 1, 20, TimeUnit.SECONDS);
-        FeedAggregator aggregator = new FeedAggregator(queue);
+        BlockingQueueFeedAggregator aggregator = new BlockingQueueFeedAggregator(queue);
         exec.scheduleWithFixedDelay(aggregator, 1, 5, TimeUnit.SECONDS);
         Thread.sleep(3000);
 
-        List<FeedMessage> messages = aggregator.getByPubDate();
+        TreeSet<FeedMessage> messages = aggregator.getByPubDate();
         assertTrue(messages.size() > 0);
         FeedMessage prev = null;
         for(FeedMessage message: messages){

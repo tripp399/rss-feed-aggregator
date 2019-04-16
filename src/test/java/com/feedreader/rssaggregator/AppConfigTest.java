@@ -1,6 +1,6 @@
 package com.feedreader.rssaggregator;
 
-import com.feedreader.rssaggregator.tasks.FeedAggregator;
+import com.feedreader.rssaggregator.tasks.BlockingQueueFeedAggregator;
 import com.feedreader.rssaggregator.tasks.FeedScanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +33,7 @@ public class AppConfigTest {
     @Test
     public void getFeedAggregator() {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        assertNotNull(context.getBean("feedAggregator", FeedAggregator.class));
+        assertNotNull(context.getBean("feedAggregator", BlockingQueueFeedAggregator.class));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class AppConfigTest {
         FeedScanner scanner = (FeedScanner)ApplicationContextProvider.getApplicationContext()
                 .getBean("feedScanner");
 
-        FeedAggregator aggregator = (FeedAggregator)ApplicationContextProvider.getApplicationContext().getBean("feedAggregator");
+        BlockingQueueFeedAggregator aggregator = (BlockingQueueFeedAggregator)ApplicationContextProvider.getApplicationContext().getBean("feedAggregator");
 
         assertEquals(scanner.getQueue(), aggregator.getItemsToProcess());
     }
