@@ -10,12 +10,11 @@ import java.util.concurrent.*;
 
 import com.feedreader.rssaggregator.model.FeedAggregate;
 
+import com.feedreader.rssaggregator.util.RSSFeedParser;
 import com.feedreader.rssaggregator.util.SyndFeedParser;
-import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 
 @SpringBootApplication
@@ -25,8 +24,7 @@ public class RssAggregatorApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(RssAggregatorApplication.class, args);
-    System.out.println("Starting...");
-    long start = System.currentTimeMillis();
+
 
     List<String> feeds = new ArrayList<>();
     try {
@@ -41,13 +39,16 @@ public class RssAggregatorApplication {
       e.printStackTrace();
     }
 
+    System.out.println("Starting...");
+    long start = System.currentTimeMillis();
+    feedAggregate = aggregate(feeds, 20);
     long finish = System.currentTimeMillis();
     System.out.println(finish - start);
+    System.out.println("size: " + feedAggregate.getAggregatedList().size());
 
-    feedAggregate = aggregate(feeds.subList(0, 50));
   }
 
-    public static FeedAggregate aggregate(List<String> feeds, int poolSize) throws MalformedURLException {
+    public static FeedAggregate aggregate(List<String> feeds, int poolSize) {
         FeedAggregate feedAggregate = new FeedAggregate<>();
 
         ExecutorService exec = Executors.newFixedThreadPool(poolSize);
@@ -55,7 +56,12 @@ public class RssAggregatorApplication {
         for (String feed : feeds) {
 //            Runnable thread = new RSSFeedParser(feed, feedAggregate);
 //            exec.submit(thread);
-            Callable<SyndFeed> thread = new SyndFeedParser(feed, feedAggregate);
+            Callable<SyndFeed> thread = null;
+            try {
+                thread = new SyndFeedParser(feed, feedAggregate);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             futures.add(exec.submit(thread));
         }
 

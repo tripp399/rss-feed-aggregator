@@ -50,12 +50,12 @@ public class RssAggregatorApplicationTests {
   @Test
   public void feedAggregateIsNotEmpty() throws MalformedURLException {
 
-//    int length = 50;
-//    int index = random.nextInt(300);
+    int length = 20;
+    int index = random.nextInt(300);
     System.out.println("starting");
     long start = System.currentTimeMillis();
 //    FeedAggregate feedAggregate = aggregate(feeds.subList(index, index + length), 20);
-    FeedAggregate feedAggregate = aggregate(feeds, 20);
+    FeedAggregate feedAggregate = aggregate(feeds, 15);
     long finish = System.currentTimeMillis();
     System.out.println(finish - start);
     System.out.println(feedAggregate.getAggregatedList().size());
@@ -67,7 +67,7 @@ public class RssAggregatorApplicationTests {
   public void feedMessageLinkIsNotEmpty() throws MalformedURLException {
 
     int length = 20;
-    int index = random.nextInt(350);
+    int index = random.nextInt(300);
     System.out.println("starting");
     long start = System.currentTimeMillis();
 //    FeedAggregate feedAggregate = aggregate(feeds.subList(index, index + length), 20);
@@ -76,15 +76,15 @@ public class RssAggregatorApplicationTests {
     System.out.println(finish - start);
     System.out.println(feedAggregate.getAggregatedList().size());
 
-    for (SyndEntry entry: (List<SyndEntry>) feedAggregate.getAggregatedList()) {
-      Assert.isTrue(null != entry.getLink() || ! entry.getLink().isEmpty(),
-              "link is null or empty");
-    }
-
-//    for (FeedMessage message : (List<FeedMessage>) feedAggregate.getAggregatedList()) {
-//      Assert.isTrue(null != message.getLink() || !message.getLink().isEmpty(),
+//    for (SyndEntry entry: (List<SyndEntry>) feedAggregate.getAggregatedList()) {
+//      Assert.isTrue(null != entry.getLink() || ! entry.getLink().isEmpty(),
 //              "link is null or empty");
 //    }
+
+    for (FeedMessage message : (List<FeedMessage>) feedAggregate.getAggregatedList()) {
+      Assert.isTrue(null != message.getLink() || !message.getLink().isEmpty(),
+              "link is null or empty");
+    }
   }
 
   @Test
@@ -127,11 +127,11 @@ public class RssAggregatorApplicationTests {
     int length = 10;
     int index = random.nextInt(350);
 
-    List<FeedMessage> feedMessages = aggregate(feeds.subList(index, index + length),20).getAggregatedList();
+    List<SyndEntry> feedMessages = aggregate(feeds.subList(index, index + length),20).getAggregatedList();
 
     for (int i = 0; i < feedMessages.size() - 1; i++) {
-      Date d1 = feedMessages.get(i).getPubDate();
-      Date d2 = feedMessages.get(i+1).getPubDate();
+      Date d1 = feedMessages.get(i).getPublishedDate();
+      Date d2 = feedMessages.get(i+1).getPublishedDate();
       Assert.isTrue( d1.compareTo(d2) <= 0 , "Messages out of order");
     }
   }
@@ -140,70 +140,20 @@ public class RssAggregatorApplicationTests {
   @Test
   public void threadPoolScalabilityMeasurement() throws MalformedURLException {
 
+    Map<Integer, Long> executionTimeMap = new HashMap<>();
     List<Long> aggregationTimes = new ArrayList<>();
-    final long start = System.currentTimeMillis();
 
-    System.out.println("Aggregating");
-    int size = aggregate(feeds.subList(0, 150), 20).getAggregatedList().size();
-    long finish = System.currentTimeMillis();
-    System.out.println(size + ", " + (finish - start));
-    Assert.isTrue(true, "");
+    for (int i = 0, j = 0; j < 350; i++, j = j + 50) {
+      final long start = System.currentTimeMillis();
+      System.out.println("Aggregating" + j);
+      int size = aggregate(feeds.subList(0, j), 20).getAggregatedList().size();
+      long finish = System.currentTimeMillis();
+
+      executionTimeMap.put(size, (finish - start));
+//      System.out.println(size + ", " + (finish - start));
+    }
+
+
   }
 
-//  @Ignore
-//  @Test
-//  public void persistListOfValidFeeds() {
-//
-//    OPMLAggregator agg = new OPMLAggregator();
-//    System.out.println("Collecting feed urls");
-//    HashSet<String> feeds = agg.aggregateOPML(Arrays.asList(Constants.URL1, Constants.URL2, Constants.URL3,
-//            Constants.URL4, Constants.URL5, Constants.URL6));
-//
-//    List<Future<?>> futuresList = new ArrayList<>();
-//    Set<String> validUrls = new HashSet<>();
-//    ExecutorService exec = Executors.newFixedThreadPool(20);
-//    System.out.println("Submitting tasks");
-//    FeedAggregate feedAggregate = new FeedAggregate();
-//    for (String feed : feeds) {
-//      Callable<String> thread = new RSSFeedParser(feed, feedAggregate);
-//      futuresList.add(exec.submit(thread));
-//    }
-//
-//    System.out.println("Checking for timeout");
-//    futuresList.forEach(future -> {
-//      try {
-//        String result = (String) future.get(2, TimeUnit.SECONDS);
-//        validUrls.add(result);
-//      } catch (TimeoutException e) {
-//        future.cancel(true);
-//        e.printStackTrace();
-//      } catch (InterruptedException e) {
-//      } catch (ExecutionException e) {
-//      }
-//    });
-//
-//    String filePath =
-//            "C:\\Users\\pulki\\Workspace\\IdeaProjects\\CPPRoject\\src\\main\\resources\\validFeeds.txt";
-//
-//    System.out.println("writing to file");
-//    validUrls.forEach(s -> {
-//      try {
-//        FileWriter w = new FileWriter(filePath);
-//
-//        PrintWriter writer = new PrintWriter(w);
-//
-//        for (String validUrl : validUrls) {
-//          writer.println(validUrl);
-//        }
-//        writer.close();
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-//    });
-//
-//    exec.shutdown();
-//    while (!exec.isTerminated()) {
-//
-//    }
-//  }
 }

@@ -1,4 +1,4 @@
-package com.feedreader.rssaggregator;
+package com.feedreader.rssaggregator.util;
 
 public class Constants {
 

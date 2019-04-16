@@ -16,6 +16,17 @@ public class FeedMessage {
     String guid;
     Date pubDate;
 
+    public FeedMessage() {
+    }
+
+    public FeedMessage(String title, String description, String link, String author, Date pubDate) {
+        this.title = title;
+        this.description = description;
+        this.link = link;
+        this.author = author;
+        this.pubDate = pubDate;
+    }
+
     public String getTitle() {
         return title;
     }

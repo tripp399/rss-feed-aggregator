@@ -1,4 +1,4 @@
-package com.feedreader.rssaggregator;
+package com.feedreader.rssaggregator.util;
 
 import com.feedreader.rssaggregator.model.Feed;
 import com.feedreader.rssaggregator.model.FeedAggregate;

@@ -1,11 +1,11 @@
 package com.feedreader.rssaggregator;
 
+import com.feedreader.rssaggregator.util.Constants;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.feedreader.rssaggregator.util.OPMLAggregator;
-import com.feedreader.rssaggregator.model.FeedsStore;
 
 import java.util.*;
 

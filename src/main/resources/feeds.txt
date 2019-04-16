@@ -354,3 +354,5 @@ http://rss.cnn.com/rss/cnn_us.rss
 http://rss.cnn.com/rss/cnn_tech.rss
 https://fivethirtyeight.com/all/feed
 https://www.huffpost.com/section/politics/feed
+http://podcasts.joerogan.net/feed
+https://www.npr.org/rss/podcast.php?id=510289
