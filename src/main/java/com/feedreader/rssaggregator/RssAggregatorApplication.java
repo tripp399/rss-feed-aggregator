@@ -57,11 +57,11 @@ public class RssAggregatorApplication {
 //            Runnable thread = new RSSFeedParser(feed, feedAggregate);
 //            exec.submit(thread);
             Callable<SyndFeed> thread = null;
-            try {
-                thread = new SyndFeedParser(feed, feedAggregate);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+//            try {
+////                thread = new SyndFeedParser(feed, feedAggregate);
+//            } catch (MalformedURLException e) {
+//                e.printStackTrace();
+//            }
             futures.add(exec.submit(thread));
         }
 
