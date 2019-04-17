@@ -12,7 +12,6 @@ import java.util.List;
 
 public class OPMLParserTest {
 
-    @Ignore
     @Test
     public void opmltest() {
 

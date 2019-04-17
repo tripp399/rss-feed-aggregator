@@ -1,6 +1,7 @@
 package com.feedreader.rssaggregator.tasks;
 
 import com.feedreader.rssaggregator.model.FeedMessage;
+import com.feedreader.rssaggregator.model.MyBlockingQueue;
 import com.feedreader.rssaggregator.util.SyndFeedParser;
 
 import java.net.MalformedURLException;
