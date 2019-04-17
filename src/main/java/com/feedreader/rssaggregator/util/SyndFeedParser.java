@@ -25,7 +25,6 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
     private SyndFeed parse() {
         SyndFeed feed = null;
         try {
-//            System.out.println("[QueuedSyndParser]Parsing "+url+" now....");
             feed = new SyndFeedInput().build(new XmlReader(url));
 
             feed.getEntries().forEach(entry -> {
@@ -39,11 +38,10 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
                         entry.getPublishedDate());
                 this.container.add(fm);
             });
-//            System.out.println("[QueuedSyndParser]Done Parsing "+url+" | Entries:"+feed.getEntries().size());
+            System.out.println("[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());
 
         } catch (FeedException|IOException e) {
-//            System.out.println("[QueuedSyndParser] Error in feed "+url);
-//            e.printStackTrace();
+            System.out.println("[QueuedSyndParser] Error in feed "+url);
         }
         return feed;
     }

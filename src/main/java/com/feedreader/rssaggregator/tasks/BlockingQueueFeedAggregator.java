@@ -4,21 +4,20 @@ import com.feedreader.rssaggregator.model.FeedMessage;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BlockingQueueFeedAggregator implements Runnable{
     private final BlockingQueue<FeedMessage> itemsToProcess;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(2); // show variation using cached thread pool
-
-    private final TreeSet<FeedMessage> byPubDate = new TreeSet<>(new Comparator<FeedMessage>() {
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // show variation using cached thread pool
+    private final ConcurrentSkipListSet<FeedMessage> byPubDate = new ConcurrentSkipListSet<>(new Comparator<FeedMessage>() {
         @Override
         public int compare(FeedMessage o1, FeedMessage o2) {
             return o1.compareTo(o2);
         }
     });
 
-//    private final List<FeedMessage> feedmessageList = new ArrayList<>();
     private static int counter = 0;
 
     public BlockingQueueFeedAggregator(BlockingQueue<FeedMessage> itemsToProcess){
@@ -29,25 +28,15 @@ public class BlockingQueueFeedAggregator implements Runnable{
         while(true){
             try {
                 FeedMessage message = this.itemsToProcess.take();
-                byPubDate.add(message);
-//                feedmessageList.add(message);
-//                System.out.println("Added in set!"+counter);
-                counter++;
+                executorService.submit(new WorkItem(message, byPubDate));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public TreeSet<FeedMessage> getByPubDate(){
-//        List<FeedMessage> copy = new ArrayList<>(this.feedmessageList);
-//        Collections.sort(copy, new Comparator<FeedMessage>() {
-//            @Override
-//            public int compare(FeedMessage o1, FeedMessage o2) {
-//                return o1.getPubDate().compareTo(o2.getPubDate());
-//            }
-//        });
-        return new TreeSet<>(this.byPubDate);
+    public Set<FeedMessage> getByPubDate(){
+        return this.byPubDate;
     }
 
     @Override
@@ -57,5 +46,20 @@ public class BlockingQueueFeedAggregator implements Runnable{
 
     public BlockingQueue<FeedMessage> getItemsToProcess() {
         return itemsToProcess;
+    }
+
+    class WorkItem implements Runnable{
+        private FeedMessage message;
+        private ConcurrentSkipListSet<FeedMessage> byPubDate;
+
+        public WorkItem(FeedMessage message, ConcurrentSkipListSet<FeedMessage> byPubDate){
+            this.message = message;
+            this.byPubDate = byPubDate;
+        }
+
+        @Override
+        public void run() {
+            byPubDate.add(this.message);
+        }
     }
 }

@@ -50,39 +50,11 @@ public class RssAggregatorApplication {
 
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
-        scheduledExecutorService.scheduleAtFixedRate(scanner, 10, 300, TimeUnit.SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(scanner, 0, 300, TimeUnit.SECONDS);
 
         ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         executorService.submit(aggregator);
     }
-
-//
-//  public static void main(String[] args) {
-//    SpringApplication.run(RssAggregatorApplication.class, args);
-//
-//
-//    List<String> feeds = new ArrayList<>();
-//    try {
-//      File file = new ClassPathResource("feeds.txt").getFile();
-//      Scanner scanner = new Scanner(file);
-//
-//      while (scanner.hasNextLine()) {
-//        feeds.add(scanner.nextLine());
-//      }
-//      scanner.close();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//
-//    System.out.println("Starting...");
-//    long start = System.currentTimeMillis();
-//    feedAggregate = aggregate(feeds, 20);
-//    long finish = System.currentTimeMillis();
-//    System.out.println(finish - start);
-//    System.out.println("size: " + feedAggregate.getAggregatedList().size());
-//
-//  }
-
 
 }

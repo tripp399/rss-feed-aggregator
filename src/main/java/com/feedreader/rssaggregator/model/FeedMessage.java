@@ -10,12 +10,12 @@ public class FeedMessage implements Comparable{
 
     private static final DateFormat PUBDATE_FORMATTER = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
 
-    String title;
-    String description;
-    String link;
-    String author;
-    String guid;
-    Date pubDate;
+    private String title;
+    private String description;
+    private String link;
+    private String author;
+    private String guid;
+    private Date pubDate;
 
     public FeedMessage() {
     }
