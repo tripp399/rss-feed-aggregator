@@ -3,6 +3,8 @@ import com.feedreader.rssaggregator.model.FeedMessage;
 import com.feedreader.rssaggregator.tasks.BlockingQueueFeedAggregator;
 import com.feedreader.rssaggregator.tasks.FeedScanner;
 import com.feedreader.rssaggregator.tasks.SimpleFeedAggregator;
+import com.feedreader.rssaggregator.util.SyndFeedParser;
+
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -11,6 +13,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -55,7 +58,8 @@ public class ExecutionSpeedTest {
         Long end = System.currentTimeMillis();
         System.out.println("[BLOCKING QUEUE] Got "+aggregator.getByPubDate().size()+" elements from "+feeds.size()+" feeds in "+(end - start)/1000+" seconds");
     }
-
+    
+    @Test
     public void threadPoolAggregatorSpeedTest(){
         long start = System.currentTimeMillis();
         FeedAggregate feedAggregate
@@ -63,11 +67,24 @@ public class ExecutionSpeedTest {
         long end = System.currentTimeMillis();
         System.out.println("[THREAD POOL] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
     }
-
+    
+    @Test
     public void directMappingAggregateSpeedTest(){
         long start = System.currentTimeMillis();
         FeedAggregate feedAggregate = simpleFeedAggregator.aggregateUsingDirectMapping(feeds);
         long end = System.currentTimeMillis();
         System.out.println("[DIRECT MAPPING] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
     }
+    
+    @Test
+	public void serialSpeedTest() throws MalformedURLException {
+		long start=System.currentTimeMillis();
+		FeedAggregate feedAggregate = new FeedAggregate<>();
+		for(String feed:feeds) {
+			SyndFeedParser feedParser = new SyndFeedParser(feed, feedAggregate);
+			feedParser.run();
+		}
+		long end = System.currentTimeMillis();
+		System.out.println("[SINGLE THREAD EXECUTION] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
+	}
 }
