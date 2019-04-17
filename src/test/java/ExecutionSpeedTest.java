@@ -1,3 +1,4 @@
+import com.feedreader.rssaggregator.model.FeedAggregate;
 import com.feedreader.rssaggregator.model.FeedMessage;
 import com.feedreader.rssaggregator.tasks.BlockingQueueFeedAggregator;
 import com.feedreader.rssaggregator.tasks.FeedScanner;
@@ -10,20 +11,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
 public class ExecutionSpeedTest {
 
     private List<String> feeds;
-    private Random random;
     private SimpleFeedAggregator simpleFeedAggregator;
 
     @Before
     public void init() {
         simpleFeedAggregator = new SimpleFeedAggregator();
-        random = new Random();
         feeds = new ArrayList<>();
         try {
             File file = new ClassPathResource("feeds.txt").getFile();
@@ -50,12 +48,15 @@ public class ExecutionSpeedTest {
         Long start = System.currentTimeMillis();
         while(!aggregator.isDone());
         Long end = System.currentTimeMillis();
-
         System.out.println("Got "+aggregator.getByPubDate().size()+" elements from "+feeds.size()+" feeds in "+(end - start)/1000+" seconds");
     }
 
     @Test
     public void threadPoolAggregatorSpeedTest(){
-
+        long start = System.currentTimeMillis();
+        FeedAggregate feedAggregate
+                = simpleFeedAggregator.aggregateUsingThreadPools(feeds,15);
+        long end = System.currentTimeMillis();
+        System.out.println("Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
     }
 }

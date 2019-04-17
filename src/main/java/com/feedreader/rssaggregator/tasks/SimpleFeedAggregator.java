@@ -26,9 +26,7 @@ public class SimpleFeedAggregator{
         }
         exec.shutdown();
         while (!exec.isTerminated()) {}
-        feedAggregate.sort();
         return feedAggregate;
-
     }
 
     public FeedAggregate aggregateUsingDirectMapping(List<String> feeds) {
@@ -54,7 +52,6 @@ public class SimpleFeedAggregator{
                 e.printStackTrace();
             }
         });
-        feedAggregate.sort();
         return feedAggregate;
     }
 }

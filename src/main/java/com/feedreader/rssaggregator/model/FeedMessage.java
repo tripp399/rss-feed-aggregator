@@ -3,7 +3,6 @@ package com.feedreader.rssaggregator.model;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 
 public class FeedMessage implements Comparable{
@@ -22,12 +21,13 @@ public class FeedMessage implements Comparable{
         this.isSentinel = false;
     }
 
-    public FeedMessage(String title, String description, String link, String author, Date pubDate) {
+    public FeedMessage(String title, String description, String link, String author, Date pubDate, String guid) {
         this.title = title;
         this.description = description;
         this.link = link;
         this.author = author;
         this.pubDate = pubDate;
+        this.guid = guid;
         this.isSentinel = false;
     }
 
@@ -91,18 +91,30 @@ public class FeedMessage implements Comparable{
         FeedMessage message = (FeedMessage)o;
         if (this.equals(message))
             return 0;
-        else
-            return this.getPubDate().compareTo(message.getPubDate());
+        else{
+            int compareStatus = this.getPubDate().compareTo(message.getPubDate());
+            if(compareStatus == 0){
+                return -1;
+            }else{
+                return compareStatus;
+            }
+        }
     }
 
     @Override
     public boolean equals(Object obj) {
         FeedMessage message = (FeedMessage)obj;
-        if (this.getTitle().equals(message.getTitle())
-                && this.getPubDate().equals(message.getPubDate())) {
+        if(!this.guid.equals(message.getGuid())){
+            return false;
+        }else if(!this.link.equals(message.getLink())){
+            return false;
+        }else if(!this.title.equals(message.getTitle())){
+            return false;
+        }else if(!this.description.equals(message.getDescription())){
+            return false;
+        }else{
             return true;
         }
-        else return false;
     }
 
     public boolean isSentinel() {

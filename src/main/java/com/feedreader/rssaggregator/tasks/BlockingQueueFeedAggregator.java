@@ -3,23 +3,15 @@ package com.feedreader.rssaggregator.tasks;
 import com.feedreader.rssaggregator.model.FeedMessage;
 
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class BlockingQueueFeedAggregator implements Runnable{
+    private static int counter = 0;
+
     private final BlockingQueue<FeedMessage> itemsToProcess;
     private final ExecutorService executorService = Executors.newCachedThreadPool(); // show variation using cached thread pool
-    private final ConcurrentSkipListSet<FeedMessage> byPubDate = new ConcurrentSkipListSet<>(new Comparator<FeedMessage>() {
-        @Override
-        public int compare(FeedMessage o1, FeedMessage o2) {
-            return o1.compareTo(o2);
-        }
-    });
+    private final ConcurrentSkipListSet<FeedMessage> byPubDate = new ConcurrentSkipListSet<>();
     private volatile boolean done = false;
-
-    private static int counter = 0;
 
     public BlockingQueueFeedAggregator(BlockingQueue<FeedMessage> itemsToProcess){
         this.itemsToProcess = itemsToProcess;
@@ -31,6 +23,8 @@ public class BlockingQueueFeedAggregator implements Runnable{
                 FeedMessage message = this.itemsToProcess.take();
                 if(message.isSentinel()){
                     done = true;
+                }else{
+                    done = false;
                 }
                 counter++;
                 executorService.submit(new WorkItem(message, byPubDate));
@@ -64,11 +58,16 @@ public class BlockingQueueFeedAggregator implements Runnable{
 
         @Override
         public void run() {
-            byPubDate.add(this.message);
+            boolean status = byPubDate.add(this.message);
+//            System.out.println("skip list status:"+status);
         }
     }
 
     public boolean isDone() {
         return done;
+    }
+
+    public static int getCounter() {
+        return counter;
     }
 }

@@ -35,7 +35,8 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
                         entry.getDescription().getValue(),
                         entry.getLink(),
                         entry.getAuthor(),
-                        entry.getPublishedDate());
+                        entry.getPublishedDate(),
+                        entry.getUri());
                 this.container.add(fm);
             });
             System.out.println("[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());

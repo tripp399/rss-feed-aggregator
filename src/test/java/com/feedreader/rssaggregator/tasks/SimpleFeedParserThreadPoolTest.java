@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
 
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SimpleFeedParserThreadPoolTest {
@@ -116,12 +118,14 @@ public class SimpleFeedParserThreadPoolTest {
         int length = 10;
         int index = random.nextInt(350);
 
-        List<FeedMessage> feedMessages = simpleFeedAggregator.aggregateUsingThreadPools(feeds.subList(index, index + length),20).getAggregatedList();
-
-        for (int i = 0; i < feedMessages.size() - 1; i++) {
-            Date d1 = feedMessages.get(i).getPubDate();
-            Date d2 = feedMessages.get(i+1).getPubDate();
-            Assert.isTrue( d1.compareTo(d2) <= 0 , "Messages out of order");
+        Set<FeedMessage> feedMessages = simpleFeedAggregator.aggregateUsingThreadPools(feeds.subList(index, index + length),20).getAggregatedList();
+        FeedMessage prev = null;
+        for(FeedMessage message: feedMessages){
+            if(prev != null){
+                // New message is more recent than prev message
+                assertTrue(message.getPubDate().compareTo(prev.getPubDate()) >= 0);
+            }
+            prev = message;
         }
     }
 }
