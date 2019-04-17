@@ -23,7 +23,7 @@ public class RssAggregatorApplication {
       private static FeedAggregate feedAggregate;
 
     public static void main(String[] args){
-        // Start sping application
+        // Start spring application
         SpringApplication.run(RssAggregatorApplication.class, args);
 
         FeedScanner scanner = (FeedScanner)ApplicationContextProvider.getApplicationContext().getBean("feedScanner");

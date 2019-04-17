@@ -27,19 +27,21 @@ public class ExecutionSpeedTest {
         simpleFeedAggregator = new SimpleFeedAggregator();
         feeds = new ArrayList<>();
         try {
-            File file = new ClassPathResource("feeds.txt").getFile();
+            File file = new ClassPathResource("allFeeds.txt").getFile();
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 feeds.add(scanner.nextLine());
             }
+            System.out.println(feeds.size());
             scanner.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
     @Test
     public void blockingQueueAggregatorSpeedTest() throws InterruptedException {
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
+        ScheduledExecutorService exec = Executors.newScheduledThreadPool(50);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
         FeedScanner scanner = new FeedScanner(queue);
         for(String url: feeds){
@@ -54,16 +56,14 @@ public class ExecutionSpeedTest {
         System.out.println("[BLOCKING QUEUE] Got "+aggregator.getByPubDate().size()+" elements from "+feeds.size()+" feeds in "+(end - start)/1000+" seconds");
     }
 
-    @Test
     public void threadPoolAggregatorSpeedTest(){
         long start = System.currentTimeMillis();
         FeedAggregate feedAggregate
-                = simpleFeedAggregator.aggregateUsingThreadPools(feeds,15);
+                = simpleFeedAggregator.aggregateUsingThreadPools(feeds,100);
         long end = System.currentTimeMillis();
         System.out.println("[THREAD POOL] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
     }
 
-    @Test
     public void directMappingAggregateSpeedTest(){
         long start = System.currentTimeMillis();
         FeedAggregate feedAggregate = simpleFeedAggregator.aggregateUsingDirectMapping(feeds);
