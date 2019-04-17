@@ -3,14 +3,18 @@ package com.feedreader.rssaggregator.model;
 import com.feedreader.rssaggregator.util.Container;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.TreeSet;
 
 public class FeedAggregate<T extends Comparable<? super T>> implements Container<T>{
 
     private final Set<T> aggregatedList;
 
+//    public FeedAggregate() {
+//        aggregatedList = new ConcurrentSkipListSet<>();
+//    }
+
     public FeedAggregate() {
-        aggregatedList = new ConcurrentSkipListSet<>();
+        aggregatedList = new TreeSet<>();
     }
 
     public Set<T> getAggregatedList() {
@@ -18,7 +22,7 @@ public class FeedAggregate<T extends Comparable<? super T>> implements Container
     }
 
     @Override
-    public void add(T a) {
+    public synchronized void add(T a) {
         aggregatedList.add(a);
     }
 }

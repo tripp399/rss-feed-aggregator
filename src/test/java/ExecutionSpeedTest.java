@@ -48,7 +48,7 @@ public class ExecutionSpeedTest {
         Long start = System.currentTimeMillis();
         while(!aggregator.isDone());
         Long end = System.currentTimeMillis();
-        System.out.println("Got "+aggregator.getByPubDate().size()+" elements from "+feeds.size()+" feeds in "+(end - start)/1000+" seconds");
+        System.out.println("[BLOCKING QUEUE] Got "+aggregator.getByPubDate().size()+" elements from "+feeds.size()+" feeds in "+(end - start)/1000+" seconds");
     }
 
     @Test
@@ -57,6 +57,14 @@ public class ExecutionSpeedTest {
         FeedAggregate feedAggregate
                 = simpleFeedAggregator.aggregateUsingThreadPools(feeds,15);
         long end = System.currentTimeMillis();
-        System.out.println("Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
+        System.out.println("[THREAD POOL] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
     }
+
+//    @Test
+//    public void directMappingAggregateSpeedTest(){
+//        long start = System.currentTimeMillis();
+//        FeedAggregate feedAggregate = simpleFeedAggregator.aggregateUsingDirectMapping(feeds);
+//        long end = System.currentTimeMillis();
+//        System.out.println("[DIRECT MAPPING] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
+//    }
 }

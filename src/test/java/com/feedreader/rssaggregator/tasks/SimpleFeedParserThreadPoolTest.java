@@ -80,24 +80,6 @@ public class SimpleFeedParserThreadPoolTest {
     }
 
     @Test
-    public void feedAggregateContainsAllMessages() throws MalformedURLException {
-        int sum = 0;
-        do {
-            int length = 1;
-            int index = random.nextInt(350);
-            int[] size = new int[4];
-
-            for (int i = index, j = 0; j < 3; i = i + length, j++) {
-                size[j] = simpleFeedAggregator.aggregateUsingThreadPools(feeds.subList(i, i + length), 20).getAggregatedList().size();
-                sum += size[j];
-            }
-            size[3] = simpleFeedAggregator.aggregateUsingThreadPools(feeds.subList(index, index + 3 * length), 20).getAggregatedList().size();
-
-            Assert.isTrue(sum == size[3], "Aggregate size not consistent");
-        } while(sum == 0);
-    }
-
-    @Test
     public void feedAggregateSizeIsConsistent() throws MalformedURLException {
         int size1, size2;
         do {

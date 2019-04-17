@@ -61,11 +61,10 @@ public class BlockingQueueFeedAggregatorTest {
         FeedScanner scanner = new FeedScanner(queue);
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
-        exec.scheduleAtFixedRate(scanner, 1, 20, TimeUnit.SECONDS);
+        exec.scheduleAtFixedRate(scanner, 1, 300, TimeUnit.SECONDS);
         BlockingQueueFeedAggregator aggregator = new BlockingQueueFeedAggregator(queue);
         exec.scheduleWithFixedDelay(aggregator, 1, 5, TimeUnit.SECONDS);
-        Thread.sleep(3000);
-
+        while(!aggregator.isDone());
         Set<FeedMessage> messages = aggregator.getByPubDate();
         assertTrue(messages.size() > 0);
         FeedMessage prev = null;

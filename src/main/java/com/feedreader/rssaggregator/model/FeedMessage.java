@@ -96,7 +96,7 @@ public class FeedMessage implements Comparable{
             if(compareStatus == 0){
                 return -1;
             }else{
-                return compareStatus;
+                return compareStatus * (-1);
             }
         }
     }
