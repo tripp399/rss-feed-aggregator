@@ -39,7 +39,7 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
                         entry.getPublishedDate());
                 this.container.add(fm);
             });
-            System.out.println("[QueuedSyndParser]Done Parsing "+url+" | Entries:"+feed.getEntries().size());
+//            System.out.println("[QueuedSyndParser]Done Parsing "+url+" | Entries:"+feed.getEntries().size());
 
         } catch (FeedException|IOException e) {
 //            System.out.println("[QueuedSyndParser] Error in feed "+url);
