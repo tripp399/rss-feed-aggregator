@@ -1,30 +1,24 @@
 package com.feedreader.rssaggregator.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import com.feedreader.rssaggregator.util.Container;
 
-public class FeedAggregate<T> {
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
-    private final List<T> aggregatedList;
+public class FeedAggregate<T extends Comparable<? super T>> implements Container<T>{
+
+    private final Set<T> aggregatedList;
 
     public FeedAggregate() {
-        aggregatedList = new CopyOnWriteArrayList<>();
-//        aggregatedList = new ArrayList<>();
+        aggregatedList = new ConcurrentSkipListSet<>();
     }
 
-    public List<T> getAggregatedList() {
+    public Set<T> getAggregatedList() {
         return aggregatedList;
     }
 
-//    public synchronized void addFeedMessage(T message) {
-//        aggregatedList.add(message);
-//    }
-    public void addFeedMessage(T message) {
-        aggregatedList.add(message);
-    }
-
-    public T getLastMessage() {
-        return aggregatedList.get(aggregatedList.size() - 1);
+    @Override
+    public void add(T a) {
+        aggregatedList.add(a);
     }
 }

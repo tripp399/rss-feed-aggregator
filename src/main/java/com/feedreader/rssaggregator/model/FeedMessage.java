@@ -5,26 +5,30 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FeedMessage {
+public class FeedMessage implements Comparable{
 
     private static final DateFormat PUBDATE_FORMATTER = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
 
-    String title;
-    String description;
-    String link;
-    String author;
-    String guid;
-    Date pubDate;
+    private String title;
+    private String description;
+    private String link;
+    private String author;
+    private String guid;
+    private Date pubDate;
+    private boolean isSentinel;
 
     public FeedMessage() {
+        this.isSentinel = false;
     }
 
-    public FeedMessage(String title, String description, String link, String author, Date pubDate) {
+    public FeedMessage(String title, String description, String link, String author, Date pubDate, String guid) {
         this.title = title;
         this.description = description;
         this.link = link;
         this.author = author;
         this.pubDate = pubDate;
+        this.guid = guid;
+        this.isSentinel = false;
     }
 
     public String getTitle() {
@@ -82,4 +86,42 @@ public class FeedMessage {
                 + "]";
     }
 
+    @Override
+    public int compareTo(Object o) {
+        FeedMessage message = (FeedMessage)o;
+        if (this.equals(message))
+            return 0;
+        else{
+            int compareStatus = this.getPubDate().compareTo(message.getPubDate());
+            if(compareStatus == 0){
+                return -1;
+            }else{
+                return compareStatus;
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FeedMessage message = (FeedMessage)obj;
+        if(!this.guid.equals(message.getGuid())){
+            return false;
+        }else if(!this.link.equals(message.getLink())){
+            return false;
+        }else if(!this.title.equals(message.getTitle())){
+            return false;
+        }else if(!this.description.equals(message.getDescription())){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public boolean isSentinel() {
+        return isSentinel;
+    }
+
+    public void setSentinel(boolean sentinel) {
+        isSentinel = sentinel;
+    }
 }

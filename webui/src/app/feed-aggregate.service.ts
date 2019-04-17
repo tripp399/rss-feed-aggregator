@@ -12,6 +12,6 @@ export class FeedAggregateService {
   constructor(private httpClient: HttpClient) { }
 
   getFeedAggregate(): Observable<FeedMessage[]> {
-    return this.httpClient.get<FeedMessage[]>('http://localhost:8080/feeds');
+    return this.httpClient.get<FeedMessage[]>('http://localhost:8080/feeds/v1');
   }
 }

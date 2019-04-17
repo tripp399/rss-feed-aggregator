@@ -1,11 +1,8 @@
 package com.feedreader.rssaggregator.util;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
-
-import com.feedreader.rssaggregator.model.FeedsStore;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class OPMLAggregator {
 

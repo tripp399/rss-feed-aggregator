@@ -1,113 +1,60 @@
 package com.feedreader.rssaggregator;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.*;
-
 import com.feedreader.rssaggregator.model.FeedAggregate;
-
-import com.feedreader.rssaggregator.util.RSSFeedParser;
-import com.feedreader.rssaggregator.util.SyndFeedParser;
-import com.rometools.rome.feed.synd.SyndFeed;
+import com.feedreader.rssaggregator.tasks.BlockingQueueFeedAggregator;
+import com.feedreader.rssaggregator.tasks.FeedScanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 @SpringBootApplication
 public class RssAggregatorApplication {
 
-  private static FeedAggregate feedAggregate;
+      private static FeedAggregate feedAggregate;
 
-  public static void main(String[] args) {
-    SpringApplication.run(RssAggregatorApplication.class, args);
+    public static void main(String[] args){
+        // Start sping application
+        SpringApplication.run(RssAggregatorApplication.class, args);
 
+        FeedScanner scanner = (FeedScanner)ApplicationContextProvider.getApplicationContext().getBean("feedScanner");
 
-    List<String> feeds = new ArrayList<>();
-    try {
-      File file = new ClassPathResource("feeds.txt").getFile();
-      Scanner scanner = new Scanner(file);
+        List<String> feeds = new ArrayList<>();
+        try {
+            InputStream file = new ClassPathResource("feeds.txt").getInputStream();
+            Scanner scan = new Scanner(file);
 
-      while (scanner.hasNextLine()) {
-        feeds.add(scanner.nextLine());
-      }
-      scanner.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    System.out.println("Starting...");
-    long start = System.currentTimeMillis();
-    feedAggregate = aggregate(feeds, 20);
-    long finish = System.currentTimeMillis();
-    System.out.println(finish - start);
-    System.out.println("size: " + feedAggregate.getAggregatedList().size());
-
-  }
-
-    public static FeedAggregate aggregate(List<String> feeds, int poolSize) {
-        FeedAggregate feedAggregate = new FeedAggregate<>();
-
-        ExecutorService exec = Executors.newFixedThreadPool(poolSize);
-        List<Future<SyndFeed>> futures = new ArrayList<>();
-        for (String feed : feeds) {
-//            Runnable thread = new RSSFeedParser(feed, feedAggregate);
-//            exec.submit(thread);
-            Callable<SyndFeed> thread = null;
-            try {
-                thread = new SyndFeedParser(feed, feedAggregate);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+            while (scan.hasNextLine()) {
+                feeds.add(scan.nextLine());
             }
-            futures.add(exec.submit(thread));
+            scan.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-//        futures.forEach(future -> {
-//            try {
-//                if (null != future.get()) {
-//                    feedAggregate.getAggregatedList()
-//                            .addAll(future.get().getEntries());
-//                }
-//            } catch (InterruptedException | ExecutionException e) {
-//                e.printStackTrace();
-//            }
-//        });
-        exec.shutdown();
-        while (!exec.isTerminated()) {
 
+        for(int i = 0; i < feeds.size(); i++){
+            scanner.addSource(feeds.get(i));
         }
 
-        return feedAggregate;
-    }
+        BlockingQueueFeedAggregator aggregator = (BlockingQueueFeedAggregator)ApplicationContextProvider.getApplicationContext().getBean("feedAggregator");
 
-    public static FeedAggregate aggregate(List<String> feeds) {
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
-        FeedAggregate feedAggregate = new FeedAggregate();
-        List<Thread> threads = new ArrayList<>();
+        scheduledExecutorService.scheduleAtFixedRate(scanner, 0, 300, TimeUnit.SECONDS);
 
-        feeds.forEach(feed -> {
-            RSSFeedParser parser = new RSSFeedParser(feed, feedAggregate);
-            Thread thread = new Thread(parser);
-            threads.add(thread);
-            thread.start();
-        });
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-        threads.forEach(thread -> {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        return feedAggregate;
-    }
-
-    public static FeedAggregate getAggregate() {
-        return feedAggregate;
+        executorService.submit(aggregator);
     }
 
 }
