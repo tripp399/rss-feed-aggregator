@@ -16,8 +16,10 @@ public class FeedMessage implements Comparable{
     private String author;
     private String guid;
     private Date pubDate;
+    private boolean isSentinel;
 
     public FeedMessage() {
+        this.isSentinel = false;
     }
 
     public FeedMessage(String title, String description, String link, String author, Date pubDate) {
@@ -26,6 +28,7 @@ public class FeedMessage implements Comparable{
         this.link = link;
         this.author = author;
         this.pubDate = pubDate;
+        this.isSentinel = false;
     }
 
     public String getTitle() {
@@ -100,5 +103,13 @@ public class FeedMessage implements Comparable{
             return true;
         }
         else return false;
+    }
+
+    public boolean isSentinel() {
+        return isSentinel;
+    }
+
+    public void setSentinel(boolean sentinel) {
+        isSentinel = sentinel;
     }
 }

@@ -10,11 +10,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FeedScanner implements Runnable{
     private Set<String> urls = new ConcurrentSkipListSet<>();
     private ExecutorService executorService = Executors.newCachedThreadPool();
     private BlockingQueue<FeedMessage> queue;
+    private AtomicInteger parsed = new AtomicInteger(0);
 
     public FeedScanner(BlockingQueue<FeedMessage> queue){
         this.queue = queue;
@@ -30,8 +32,22 @@ public class FeedScanner implements Runnable{
     }
 
     public void startScanner(){
+        int i = 0;
         for(String url: this.urls){
-            executorService.submit(new ScanSource(url, this.queue));
+            executorService.submit(new ScanSource(url, this.queue, parsed));
+            i++;
+        }
+
+        // Busy waiting
+        while(this.parsed.get() != this.urls.size()){}
+
+        FeedMessage sentinel = new FeedMessage();
+        sentinel.setSentinel(true);
+        try {
+            System.out.println("----SENTINEL SENT----");
+            this.queue.put(sentinel);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -43,10 +59,12 @@ public class FeedScanner implements Runnable{
     class ScanSource implements Runnable{
         private final String url;
         private final BlockingQueue<FeedMessage> queue;
+        private final AtomicInteger parsed;
 
-        public ScanSource(String url, BlockingQueue<FeedMessage> queue){
+        public ScanSource(String url, BlockingQueue<FeedMessage> queue, AtomicInteger parsed){
             this.url = url;
             this.queue = queue;
+            this.parsed = parsed;
         }
 
         @Override
@@ -59,6 +77,7 @@ public class FeedScanner implements Runnable{
                 System.out.println("[FeedScanner] URL "+this.url+"is malformed!");
                 e.printStackTrace();
             }
+            this.parsed.incrementAndGet();
         }
     }
 

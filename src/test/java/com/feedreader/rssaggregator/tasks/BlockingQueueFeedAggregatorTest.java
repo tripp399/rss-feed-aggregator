@@ -3,9 +3,7 @@ package com.feedreader.rssaggregator.tasks;
 import com.feedreader.rssaggregator.model.FeedMessage;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.*;
 
 import static org.junit.Assert.assertTrue;
@@ -78,5 +76,20 @@ public class BlockingQueueFeedAggregatorTest {
             }
             prev = message;
         }
+    }
+
+    @Test
+    public void isDoneTest() throws InterruptedException {
+        ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
+        BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
+        FeedScanner scanner = new FeedScanner(queue);
+        String url = "http://feeds.feedburner.com/TellDontAsk";
+        scanner.addSource(url);
+        exec.scheduleAtFixedRate(scanner, 1, 300, TimeUnit.SECONDS);
+        BlockingQueueFeedAggregator aggregator = new BlockingQueueFeedAggregator(queue);
+        exec.scheduleWithFixedDelay(aggregator, 1, 1, TimeUnit.SECONDS);
+        Thread.sleep(3000);
+        while(!aggregator.isDone());
+        System.out.println("Aggregator size:" + aggregator.getByPubDate().size());
     }
 }

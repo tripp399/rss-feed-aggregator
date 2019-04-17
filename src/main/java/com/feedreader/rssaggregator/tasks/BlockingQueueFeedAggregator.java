@@ -17,6 +17,7 @@ public class BlockingQueueFeedAggregator implements Runnable{
             return o1.compareTo(o2);
         }
     });
+    private volatile boolean done = false;
 
     private static int counter = 0;
 
@@ -28,6 +29,10 @@ public class BlockingQueueFeedAggregator implements Runnable{
         while(true){
             try {
                 FeedMessage message = this.itemsToProcess.take();
+                if(message.isSentinel()){
+                    done = true;
+                }
+                counter++;
                 executorService.submit(new WorkItem(message, byPubDate));
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -61,5 +66,9 @@ public class BlockingQueueFeedAggregator implements Runnable{
         public void run() {
             byPubDate.add(this.message);
         }
+    }
+
+    public boolean isDone() {
+        return done;
     }
 }
