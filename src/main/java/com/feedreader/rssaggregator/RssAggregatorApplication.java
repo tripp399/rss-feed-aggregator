@@ -7,8 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -30,7 +30,7 @@ public class RssAggregatorApplication {
 
         List<String> feeds = new ArrayList<>();
         try {
-            File file = new ClassPathResource("feeds.txt").getFile();
+            InputStream file = new ClassPathResource("feeds.txt").getInputStream();
             Scanner scan = new Scanner(file);
 
             while (scan.hasNextLine()) {

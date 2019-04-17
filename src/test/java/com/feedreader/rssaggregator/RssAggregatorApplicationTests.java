@@ -19,7 +19,7 @@ import java.util.*;
 @SpringBootTest
 public class RssAggregatorApplicationTests {
 
-  private List<String> feeds;
+  private List<String> feeds = new ArrayList<>();
   private SimpleFeedAggregator simpleFeedAggregator;
 
   @Before

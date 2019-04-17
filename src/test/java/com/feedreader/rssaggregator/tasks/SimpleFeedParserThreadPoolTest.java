@@ -73,7 +73,7 @@ public class SimpleFeedParserThreadPoolTest {
         System.out.println(finish - start);
         System.out.println(feedAggregate.getAggregatedList().size());
 
-        for (FeedMessage message : (List<FeedMessage>) feedAggregate.getAggregatedList()) {
+        for (FeedMessage message : (Set<FeedMessage>) feedAggregate.getAggregatedList()) {
             Assert.isTrue(null != message.getLink() || !message.getLink().isEmpty(),
                     "link is null or empty");
         }
