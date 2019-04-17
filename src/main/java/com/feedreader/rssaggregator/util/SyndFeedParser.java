@@ -39,13 +39,13 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
                         entry.getUri());
                 this.container.add(fm);
             });
-            System.out.println("[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());
+//            System.out.println("[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());
 
         } catch (FeedException|IOException|NullPointerException e) {
-            System.out.println("[QueuedSyndParser] Error in feed "+url);
+//            System.out.println("[QueuedSyndParser] Error in feed "+url);
         } catch(Exception e){
-            System.out.println("[QueuedSyndParser] Unexpected Error in feed "+url);
-            e.printStackTrace();
+//            System.out.println("[QueuedSyndParser] Unexpected Error in feed "+url);
+//            e.printStackTrace();
         }
         return feed;
     }

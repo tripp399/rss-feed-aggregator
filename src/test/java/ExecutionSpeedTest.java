@@ -4,7 +4,9 @@ import com.feedreader.rssaggregator.tasks.BlockingQueueFeedAggregator;
 import com.feedreader.rssaggregator.tasks.FeedScanner;
 import com.feedreader.rssaggregator.tasks.SimpleFeedAggregator;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
+@FixMethodOrder(MethodSorters.JVM)
 public class ExecutionSpeedTest {
 
     private List<String> feeds;
@@ -60,11 +63,11 @@ public class ExecutionSpeedTest {
         System.out.println("[THREAD POOL] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
     }
 
-//    @Test
-//    public void directMappingAggregateSpeedTest(){
-//        long start = System.currentTimeMillis();
-//        FeedAggregate feedAggregate = simpleFeedAggregator.aggregateUsingDirectMapping(feeds);
-//        long end = System.currentTimeMillis();
-//        System.out.println("[DIRECT MAPPING] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
-//    }
+    @Test
+    public void directMappingAggregateSpeedTest(){
+        long start = System.currentTimeMillis();
+        FeedAggregate feedAggregate = simpleFeedAggregator.aggregateUsingDirectMapping(feeds);
+        long end = System.currentTimeMillis();
+        System.out.println("[DIRECT MAPPING] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
+    }
 }

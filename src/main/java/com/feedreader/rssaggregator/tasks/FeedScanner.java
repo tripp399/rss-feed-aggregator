@@ -44,7 +44,7 @@ public class FeedScanner implements Runnable{
         FeedMessage sentinel = new FeedMessage();
         sentinel.setSentinel(true);
         try {
-            System.out.println("----SENTINEL SENT----");
+//            System.out.println("----SENTINEL SENT----");
             this.queue.put(sentinel);
         } catch (InterruptedException e) {
             e.printStackTrace();
