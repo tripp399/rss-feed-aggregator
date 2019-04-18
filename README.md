@@ -30,7 +30,7 @@
     - Architecture design
 
 ## Project Description
-RSS feeds are a means for a interested subscriber to receive updates about their preferred web-based content within a very short time after it is updated.
+RSS is a type of web feed which allows interested users to receive updates about their preferred web-based content within a very short time after it is updated.RSS Feed Reader aggregates multiple RSS feeds to display them in a single place.
 RSS Feed aggregator is the perfect project to demonstrate the power of multithreading. It is a means to show the famous problem of producer-consumer. There are multiple RSS Feed available on the web. To display the content of various sites in one place we need to -
 1. Request for that web page
 2. Wait till we receive a response of the feed
@@ -44,7 +44,7 @@ In this project, we used various techniques to delegate tasks for concurrent exe
 - Blocking queues
 - Thread Pools
 - Direct Mapping to Threads
-- Sequential execution (to display the efficiency of concurrent techniques)
+- Sequential execution (to display the efficiency of concurrent techniques by comparison)
 
 ## Pre-requisite for building
 
