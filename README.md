@@ -51,24 +51,26 @@ In this project, we used various techniques to delegate tasks for concurrent exe
 
 ## Pre-requisite for building
 
-1. Maven
-2. Node package manager
+### Maven
+
+[Maven installation instructions](https://maven.apache.org/install.html)
+
+### Node 
+
+[Node](https://nodejs.org/en/download/)
 
 ### Node package manager
 
 [Npm installation instructions](https://www.npmjs.com/get-npm)
 
-### Maven
 
-[Maven installation instructions](https://maven.apache.org/install.html)
+## Install maven dependencies
+
+`mvn install`
 
 ## Build the project
 
 `mvn compile`
-
-## Executing the project
-
-`mvn package`
 
 ## To start application:
 
@@ -77,11 +79,22 @@ In this project, we used various techniques to delegate tasks for concurrent exe
 `mvn spring-boot:run`
 
 ### Using jar file:
+Execute:
+`mvn pacakage`
 
+Then:
 `java -jar .\target\rss-aggregator-0.0.1-SNAPSHOT.jar`
 
-### Angular JS application
+### Angular application
 
-`cd webui`
+The angular application resides in `webui` directory
+
+Navigate to it using: `cd ./webui`
+
+## Install dependencies for front end
+
+`npm install`
+
+## Run the front end
 
 `ng serve --open`
