@@ -34,7 +34,7 @@ public class FeedAggregate<T extends Comparable<? super T>> implements Container
     }
 
     @Override
-    public void addAll(Set<T> a) {
+    public synchronized void addAll(Set<T> a) {
         this.aggregatedList.addAll(a);
     }
 }

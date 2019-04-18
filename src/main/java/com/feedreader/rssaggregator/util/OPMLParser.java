@@ -80,13 +80,6 @@ public class OPMLParser implements Runnable {
                 }
                 if (!xmlUrl.isEmpty()) {
                     try {
-//                        URL url = new URL(xmlUrl);
-//                        URLConnection openConnection = url.openConnection();
-//                        openConnection.addRequestProperty(
-//                                "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0"
-//                        );
-//                        openConnection.getInputStream();
-
                         feedsSet.add(xmlUrl);
                     } catch (Exception e) {
                     }

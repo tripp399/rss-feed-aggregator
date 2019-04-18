@@ -179,8 +179,6 @@ public class FeedMessage implements Comparable{
             return false;
         }else if(!this.title.equals(message.getTitle())){
             return false;
-        }else if(!this.description.equals(message.getDescription())){
-            return false;
         }else{
             return true;
         }

@@ -44,6 +44,7 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
         try {
             feed = new SyndFeedInput().build(new XmlReader(url));
 
+//            System.out.println("[QueuedSyndParser] Now Parsing "+url+" | Entries:"+feed.getEntries().size());
             feed.getEntries().forEach(entry -> {
                 if(entry.getPublishedDate() == null){
                     entry.setPublishedDate(new Date());
@@ -56,7 +57,7 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
                         entry.getUri());
                 this.container.add(fm);
             });
-//            System.out.println("[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());
+//            System.out.println("\t[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());
 
         } catch (FeedException|IOException|NullPointerException e) {
 //            System.out.println("[QueuedSyndParser] Error in feed "+url);
@@ -91,12 +92,12 @@ public class SyndFeedParser implements Runnable, Callable<SyndFeed> {
                 messages.add(fm);
             });
             this.container.addAll(messages);
-//            System.out.println("[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());
+            System.out.println("[QueuedSyndParser] Done Parsing "+url+" | Entries:"+feed.getEntries().size());
 
         } catch (FeedException|IOException|NullPointerException e) {
-//            System.out.println("[QueuedSyndParser] Error in feed "+url);
+            System.out.println("[QueuedSyndParser] Error in feed "+url);
         } catch(Exception e){
-//            System.out.println("[QueuedSyndParser] Unexpected Error in feed "+url);
+            System.out.println("[QueuedSyndParser] Unexpected Error in feed "+url);
 //            e.printStackTrace();
         }
         return feed;
