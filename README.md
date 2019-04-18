@@ -16,13 +16,18 @@
 
 - Pulkit Tripathi
     - Set up the framework of the Spring project.
-    - Complete Angular JS front end for displaying feeds.
-    - Correctness tests for Thread pools.
+    - Callable FeedParser implementation
+    - SimpleFeedAggregator (aggregation using threadpool without blocking queues and direct mapping) implementation
+    - Tests for correctness of aggregation.
+    - Complete Angular front end for displaying feeds.
+    - Architecture design 
 
 - Akash Shingte
-    - Blocking queue implementation with tests
+    - Implementation of BlockingQueueFeedAggregator and FeedScanner.
+    - Tests for the Blocking Queue implementation of aggregation
     - Refactored FeedMessage with comparator.
     - Execution speed tests.
+    - Architecture design
 
 ## Project Description
 
@@ -51,20 +56,19 @@ In this project, we used various techniques to delegate tasks for creating concu
 
 ### Spring boot
 
-<Add instructions to install spring boot>
+[Apache Spring boot installation instructions](https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-installing-spring-boot.html)
 
 ### Node package manager
 
-<Add instruction to install npm>
+[Npm onstallation instructions](https://www.npmjs.com/get-npm)
 
 ### Maven
 
-<Maven to build the spring project>
-<Instruction to get maven>
+[Maven installation instructions](https://maven.apache.org/install.html)
 
 ### Angular CLI
 
-<Instruction to get Angular CLI>
+[Angular installation instructions](https://cli.angular.io/)
 
 ## Build the project
 
@@ -87,4 +91,5 @@ In this project, we used various techniques to delegate tasks for creating concu
 ### Angular JS application
 
 `cd webui`
+
 `ng serve --open`
