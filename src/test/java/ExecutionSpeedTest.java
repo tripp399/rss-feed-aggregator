@@ -3,15 +3,14 @@ import com.feedreader.rssaggregator.model.FeedMessage;
 import com.feedreader.rssaggregator.tasks.BlockingQueueFeedAggregator;
 import com.feedreader.rssaggregator.tasks.FeedScanner;
 import com.feedreader.rssaggregator.tasks.SimpleFeedAggregator;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import com.feedreader.rssaggregator.util.SyndFeedParser;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,7 +27,7 @@ public class ExecutionSpeedTest {
         simpleFeedAggregator = new SimpleFeedAggregator();
         feeds = new ArrayList<>();
         try {
-            File file = new ClassPathResource("feeds.txt").getFile();
+            File file = new ClassPathResource("full3.txt").getFile();
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 feeds.add(scanner.nextLine());
@@ -66,6 +65,7 @@ public class ExecutionSpeedTest {
         System.out.println("[THREAD POOL] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
     }
 
+    @Ignore
     @Test
     public void directMappingAggregateSpeedTest(){
         Runnable r = () ->{
@@ -87,4 +87,16 @@ public class ExecutionSpeedTest {
             Assert.assertFalse(state);
         }
     }
+
+    @Test
+	public void serialSpeedTest() throws MalformedURLException {
+		long start=System.currentTimeMillis();
+		FeedAggregate feedAggregate = new FeedAggregate<>();
+		for(String feed:feeds) {
+			SyndFeedParser feedParser = new SyndFeedParser(feed, feedAggregate, false);
+			feedParser.run();
+		}
+		long end = System.currentTimeMillis();
+		System.out.println("[SINGLE THREAD EXECUTION] Got "+feedAggregate.getAggregatedList().size()+" elements from "+feeds.size()+" feeds in "+(end-start)/1000+ " seconds");
+	}
 }
