@@ -16,13 +16,18 @@
 
 - Pulkit Tripathi
     - Set up the framework of the Spring project.
-    - Complete Angular JS front end for displaying feeds.
-    - Correctness tests for Thread pools.
+    - Callable FeedParser implementation
+    - SimpleFeedAggregator (aggregation using threadpool without blocking queues and direct mapping) implementation
+    - Tests for correctness of aggregation.
+    - Complete Angular front end for displaying feeds.
+    - Architecture design 
 
 - Akash Shingte
-    - Blocking queue implementation with tests
+    - Implementation of BlockingQueueFeedAggregator and FeedScanner.
+    - Tests for the Blocking Queue implementation of aggregation
     - Refactored FeedMessage with comparator.
     - Execution speed tests.
+    - Architecture design
 
 ## Project Description
 
