@@ -3,8 +3,11 @@
 ## Authors
 
 - Nishtha Shrivastav (2594-5398)
+    nishthaShrivastav
 - Pulkit Tripathi (9751-9461)
+    tripp399, pt-repos
 - Akash Shingte (4874-1966)
+    cieloazure
 
 ## Contributions
 
