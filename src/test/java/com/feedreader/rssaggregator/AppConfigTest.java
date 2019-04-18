@@ -38,8 +38,6 @@ public class AppConfigTest {
 
     @Test
     public void testBlockingQueueInScannerAndAggregator(){
-//        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-//        FeedScanner scanner = context.getBean("feedScanner")
         FeedScanner scanner = (FeedScanner)ApplicationContextProvider.getApplicationContext()
                 .getBean("feedScanner");
 

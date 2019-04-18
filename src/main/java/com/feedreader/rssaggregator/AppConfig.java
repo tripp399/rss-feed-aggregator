@@ -27,6 +27,6 @@ public class AppConfig {
 
     @Bean
     public FeedScanner feedScanner(){
-        return new FeedScanner(feedMessageQueue());
+        return new FeedScanner(feedMessageQueue(), false);
     }
 }

@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+/**
+ * OPMLParser which parses the opml files
+ */
 public class OPMLParser implements Runnable {
-
     private static final String TITLE = "title";
     private static final String HTMLURL = "htmlUrl";
     private static final String XMLURL = "xmlUrl";
@@ -23,6 +23,11 @@ public class OPMLParser implements Runnable {
     private final URL opmlUrl;
     ConcurrentSkipListSet<String> feedsSet;
 
+    /**
+     * Constructor
+     * @param opmlUrl The opmlurl to parse
+     * @param feedsSet The list in which to aggregated the items processed from this url
+     */
     public OPMLParser(String opmlUrl, ConcurrentSkipListSet<String> feedsSet) {
         this.feedsSet = feedsSet;
         try {
@@ -32,6 +37,10 @@ public class OPMLParser implements Runnable {
         }
     }
 
+    /**
+     * Method which parses the url
+     * @return The aggregated list which contain a set of urls
+     */
     public ConcurrentSkipListSet<String> parseOPML() {
         try {
             String title = "";
@@ -90,6 +99,10 @@ public class OPMLParser implements Runnable {
         return feedsSet;
     }
 
+    /**
+     * Open an input stream from a url for reading in the elements
+     * @return InputStream for url from which to process
+     */
     private InputStream read() {
         try {
             return opmlUrl.openStream();
@@ -102,5 +115,4 @@ public class OPMLParser implements Runnable {
     public void run() {
         parseOPML();
     }
-
 }

@@ -105,7 +105,7 @@ public class SimpleFeedParserThreadPoolTest {
         for(FeedMessage message: feedMessages){
             if(prev != null){
                 // New message is more recent than prev message
-                assertTrue(message.getPubDate().compareTo(prev.getPubDate()) >= 0);
+                assertTrue(message.getPubDate().compareTo(prev.getPubDate()) <= 0);
             }
             prev = message;
         }

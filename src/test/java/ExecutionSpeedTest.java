@@ -28,7 +28,7 @@ public class ExecutionSpeedTest {
         simpleFeedAggregator = new SimpleFeedAggregator();
         feeds = new ArrayList<>();
         try {
-            File file = new ClassPathResource("full3.txt").getFile();
+            File file = new ClassPathResource("feeds.txt").getFile();
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 feeds.add(scanner.nextLine());
@@ -44,7 +44,7 @@ public class ExecutionSpeedTest {
     public void blockingQueueAggregatorSpeedTest() throws InterruptedException {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         for(String url: feeds){
             scanner.addSource(url);
         }
