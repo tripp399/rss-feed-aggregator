@@ -29,7 +29,7 @@ public class ExecutionSpeedTest {
         simpleFeedAggregator = new SimpleFeedAggregator();
         feeds = new ArrayList<>();
         try {
-            File file = new ClassPathResource("feeds_working.txt").getFile();
+            File file = new ClassPathResource("feeds.txt").getFile();
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 feeds.add(scanner.nextLine());
@@ -43,18 +43,18 @@ public class ExecutionSpeedTest {
     
     @Test
     public void blockingQueueAggregatorSpeedTest() throws InterruptedException {
-        singleItem(500);
+        singleItem(350);
     }
 
     @Test
     public void threadPoolAggregatorSpeedTest(){
-        poolTest(500);
+        poolTest(350);
     }
 
 
     @Test
     public void directMappingAggregateSpeedTest(){
-            directMappingTest(500);
+            directMappingTest(350);
     }
 
     @Ignore
@@ -73,7 +73,7 @@ public class ExecutionSpeedTest {
 
     @Test
     public void blockingQueueAggregatorWithBatchAdditionSpeedTest2() throws InterruptedException {
-            batch(500);
+            batch(350);
     }
 
     private void batch(int i) {
@@ -110,7 +110,7 @@ public class ExecutionSpeedTest {
             if(state.get()){
                 System.out.println((end-start)/1000+" secs");
             }else{
-                System.out.println("Not done in 120 mins");
+                System.out.println("Not done in 120 seconds");
             }
         } catch (InterruptedException e) {
         }

@@ -54,6 +54,9 @@ public class RssAggregatorApplication {
 
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.submit(aggregator);
+
+        System.out.println("Open localhost:8080/feeds/v1 to get list of aggregated elements \n" +
+                "run angular application to view the webui at localhost:4200");
     }
 
 }
