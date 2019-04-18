@@ -8,22 +8,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentSkipListSet;
 
+/**
+ * OPMLParser which parses the opml files
+ */
 public class OPMLParser implements Runnable {
-
     private static final String TITLE = "title";
     private static final String HTMLURL = "htmlUrl";
     private static final String XMLURL = "xmlUrl";
     private static final String TEXT = "text";
     private static final String TYPE = "type";
     private final URL opmlUrl;
-    HashSet<String> feedsList;
+    ConcurrentSkipListSet<String> feedsSet;
 
-    public OPMLParser(String opmlUrl, HashSet<String> feedsList) {
-        this.feedsList = feedsList;
+    /**
+     * Constructor
+     * @param opmlUrl The opmlurl to parse
+     * @param feedsSet The list in which to aggregated the items processed from this url
+     */
+    public OPMLParser(String opmlUrl, ConcurrentSkipListSet<String> feedsSet) {
+        this.feedsSet = feedsSet;
         try {
             this.opmlUrl = new URL(opmlUrl);
         } catch (MalformedURLException e) {
@@ -31,7 +37,11 @@ public class OPMLParser implements Runnable {
         }
     }
 
-    public HashSet<String> parseOPML() {
+    /**
+     * Method which parses the url
+     * @return The aggregated list which contain a set of urls
+     */
+    public ConcurrentSkipListSet<String> parseOPML() {
         try {
             String title = "";
             String htmlUrl = "";
@@ -70,14 +80,7 @@ public class OPMLParser implements Runnable {
                 }
                 if (!xmlUrl.isEmpty()) {
                     try {
-                        URL url = new URL(xmlUrl);
-                        URLConnection openConnection = url.openConnection();
-                        openConnection.addRequestProperty(
-                                "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0"
-                        );
-                        openConnection.getInputStream();
-
-                        feedsList.add(xmlUrl);
+                        feedsSet.add(xmlUrl);
                     } catch (Exception e) {
                     }
                 }
@@ -86,9 +89,13 @@ public class OPMLParser implements Runnable {
             e.printStackTrace();
             // throw new RuntimeException(e);
         }
-        return feedsList;
+        return feedsSet;
     }
 
+    /**
+     * Open an input stream from a url for reading in the elements
+     * @return InputStream for url from which to process
+     */
     private InputStream read() {
         try {
             return opmlUrl.openStream();
@@ -101,5 +108,4 @@ public class OPMLParser implements Runnable {
     public void run() {
         parseOPML();
     }
-
 }

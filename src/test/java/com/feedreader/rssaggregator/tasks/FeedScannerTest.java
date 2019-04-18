@@ -12,7 +12,7 @@ public class FeedScannerTest {
     @Test
     public void initialize() throws InterruptedException {
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
         assertTrue(scanner.removeSource(url));
@@ -22,7 +22,7 @@ public class FeedScannerTest {
     public void testRepeatedExecution() throws InterruptedException {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         scanner.addSource("http://www.sqlservercentral.com/Forums/RssFeed148-0-0-1.aspx");
         exec.scheduleAtFixedRate(scanner, 1, 10, TimeUnit.SECONDS);
 
@@ -49,7 +49,7 @@ public class FeedScannerTest {
     public void removeSource() {
         String url = "http://feeds.feedburner.com/TellDontAsk";
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         assertFalse(scanner.removeSource(url));
     }
 
@@ -57,7 +57,7 @@ public class FeedScannerTest {
     public void startScannerWithInvalidURL() throws InterruptedException {
         String url = "invalidurl";
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         scanner.addSource(url);
         scanner.startScanner();
         int messages = 0;

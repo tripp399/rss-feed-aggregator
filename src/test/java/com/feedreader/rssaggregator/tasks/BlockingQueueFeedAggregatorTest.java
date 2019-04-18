@@ -14,7 +14,7 @@ public class BlockingQueueFeedAggregatorTest {
     public void processQueue() throws InterruptedException {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
         exec.scheduleAtFixedRate(scanner, 1, 30, TimeUnit.SECONDS);
@@ -33,7 +33,7 @@ public class BlockingQueueFeedAggregatorTest {
     public void multipleCallsWillResultInGreaterNumberOfFeeds() throws InterruptedException {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         String url = "http://feeds.feedburner.com/TellDontAsk";
         String url2 = "https://www.npr.org/rss/podcast.php?id=510289";
         scanner.addSource(url);
@@ -58,21 +58,20 @@ public class BlockingQueueFeedAggregatorTest {
     public void getByPubDate() throws InterruptedException {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
-        exec.scheduleAtFixedRate(scanner, 1, 20, TimeUnit.SECONDS);
+        exec.scheduleAtFixedRate(scanner, 1, 300, TimeUnit.SECONDS);
         BlockingQueueFeedAggregator aggregator = new BlockingQueueFeedAggregator(queue);
         exec.scheduleWithFixedDelay(aggregator, 1, 5, TimeUnit.SECONDS);
-        Thread.sleep(3000);
-
+        while(!aggregator.isDone());
         Set<FeedMessage> messages = aggregator.getByPubDate();
         assertTrue(messages.size() > 0);
         FeedMessage prev = null;
         for(FeedMessage message: messages){
             if(prev != null){
                 // New message is more recent than prev message
-                assertTrue(message.getPubDate().compareTo(prev.getPubDate()) >= 0);
+                assertTrue(message.getPubDate().compareTo(prev.getPubDate()) <= 0);
             }
             prev = message;
         }
@@ -82,7 +81,7 @@ public class BlockingQueueFeedAggregatorTest {
     public void isDoneTest() throws InterruptedException {
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
         BlockingQueue<FeedMessage> queue = new LinkedBlockingQueue<>();
-        FeedScanner scanner = new FeedScanner(queue);
+        FeedScanner scanner = new FeedScanner(queue, false);
         String url = "http://feeds.feedburner.com/TellDontAsk";
         scanner.addSource(url);
         exec.scheduleAtFixedRate(scanner, 1, 300, TimeUnit.SECONDS);
