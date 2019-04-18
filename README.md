@@ -51,27 +51,16 @@ In this project, we used various techniques to delegate tasks for concurrent exe
 
 ## Pre-requisite for building
 
-1. Spring Boot
-2. Node
-3. Node package manager
-4. Maven
-5. Angular CLI
-
-### Spring boot
-
-[Apache Spring boot installation instructions](https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-installing-spring-boot.html)
+1. Maven
+2. Node package manager
 
 ### Node package manager
 
-[Npm onstallation instructions](https://www.npmjs.com/get-npm)
+[Npm installation instructions](https://www.npmjs.com/get-npm)
 
 ### Maven
 
 [Maven installation instructions](https://maven.apache.org/install.html)
-
-### Angular CLI
-
-[Angular installation instructions](https://cli.angular.io/)
 
 ## Build the project
 
