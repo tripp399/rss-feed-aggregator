@@ -56,20 +56,19 @@ In this project, we used various techniques to delegate tasks for creating concu
 
 ### Spring boot
 
-<Add instructions to install spring boot>
+[Apache Spring boot installation instructions](https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-installing-spring-boot.html)
 
 ### Node package manager
 
-<Add instruction to install npm>
+[Npm onstallation instructions](https://www.npmjs.com/get-npm)
 
 ### Maven
 
-<Maven to build the spring project>
-<Instruction to get maven>
+[Maven installation instructions](https://maven.apache.org/install.html)
 
 ### Angular CLI
 
-<Instruction to get Angular CLI>
+[Angular installation instructions](https://cli.angular.io/)
 
 ## Build the project
 
@@ -92,4 +91,5 @@ In this project, we used various techniques to delegate tasks for creating concu
 ### Angular JS application
 
 `cd webui`
+
 `ng serve --open`
