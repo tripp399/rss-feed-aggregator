@@ -6,8 +6,13 @@ import { FeedAggregate } from '../feed-aggregate';
 import { FeedMessage } from '../feed-message';
 
 const testAggregateList = [
-  { title: 'Title 1', description: 'Description 1', link: 'http://podcasts.joerogan.net/feed', author: 'Author 1', pubDate: new Date() },
-  { title: 'Title 2', description: 'Description 2', link: 'http://rss.nytimes.com/services/xml/rss/nyt/World.xml', author: 'Author 2', pubDate: new Date() }
+  {
+    title: 'Title 1', description: 'Description 1', link: 'http://podcasts.joerogan.net/feed', author: 'Author 1', pubDate: new Date() 
+  },
+  {
+    title: 'Title 2', description: 'Description 2', link: 'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+    author: 'Author 2', pubDate: new Date()
+  }
 ];
 
 @Component({
@@ -38,12 +43,15 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  redirectToSource(url: string): void  {
+  parseHtml(html: string) {
+    document.getElementById('desc').innerHTML = html;
+  }
+
+  redirectToSource(url: string): void {
     window.open(url, '_blank');
   }
 
   getDomainFromUrl(url: string) {
-    // const r = /:\/\/(.[^/]+)/;
     if (!(url.length === 0)) {
       const domain = url.match(/:\/\/(.[^/]+)/);
       if (!(domain == null)) {

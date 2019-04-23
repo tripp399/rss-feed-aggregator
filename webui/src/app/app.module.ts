@@ -7,11 +7,13 @@ import { MatTableModule, MatPaginatorModule } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
+import { ParseHtmlPipe } from './parse-html.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    ParseHtmlPipe
   ],
   imports: [
     AppRoutingModule,

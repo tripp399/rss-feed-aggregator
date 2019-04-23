@@ -8,12 +8,14 @@
           <div class="feedElement" (click)="redirectToSource(element.link)">
             <p><b>{{element.title ? element.title : "Mystery Link!"}} &nbsp; <span style="color: dimgrey">{{this.getDomainFromUrl(element.link)}}</span></b></p>
             <p class="description">{{element.pubDate | date}}</p>
+            <div class=description id="desc"></div>
+            <p class="description">{{this.parseHtml(element.description)}}</p>
           </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: tableColumns; let i = index"></tr>
     </table>
 
     <mat-paginator [pageSizeOptions]="[10, 50, 100, 200]" showFirstLastButtons></mat-paginator>
