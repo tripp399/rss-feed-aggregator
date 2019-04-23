@@ -8,7 +8,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ParseHtmlPipe implements PipeTransform {
   transform(html: string) {
     const parsed = new DOMParser().parseFromString(html, 'text/html');
-    // const parsed = new DOMParser().parseFromString(html, 'text/html');
     console.log('parsed: ');
     console.log(parsed);
     return parsed;

@@ -43,10 +43,6 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  parseHtml(html: string) {
-    document.getElementById('desc').innerHTML = html;
-  }
-
   redirectToSource(url: string): void {
     window.open(url, '_blank');
   }

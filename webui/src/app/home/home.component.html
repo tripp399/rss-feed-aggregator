@@ -7,9 +7,8 @@
         <td mat-cell *matCellDef="let element">
           <div class="feedElement" (click)="redirectToSource(element.link)">
             <p><b>{{element.title ? element.title : "Mystery Link!"}} &nbsp; <span style="color: dimgrey">{{this.getDomainFromUrl(element.link)}}</span></b></p>
-            <p class="description">{{element.pubDate | date}}</p>
-            <div class=description id="desc"></div>
-            <p class="description">{{this.parseHtml(element.description)}}</p>
+            <p class="pubdate">{{element.pubDate | date}}</p>
+            <div class=description [innerHTML]="element.description"></div>
           </div>
         </td>
       </ng-container>
