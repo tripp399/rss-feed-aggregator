@@ -1,37 +1,5 @@
 # RSS Feed Aggregator
 
-## Authors
-
-- Nishtha Shrivastav (2594-5398)
-    nishthaShrivastav
-- Pulkit Tripathi (9751-9461)
-    tripp399, pt-repos
-- Akash Shingte (4874-1966)
-    cieloazure
-
-## Contributions
-
-- Nishtha Shrivatav
-    - Developed the logic for parsing OPML Files parallely.
-    - Developed the Thread pool implementation.
-    - Developed the Direct Mapping implementation.
-    - Tests for Thread pool with different thread sizes.
-
-- Pulkit Tripathi
-    - Set up the framework of the Spring project.
-    - Callable FeedParser implementation
-    - SimpleFeedAggregator (aggregation using threadpool without blocking queues and direct mapping) implementation
-    - Tests for correctness of aggregation.
-    - Complete Angular front end for displaying feeds.
-    - Architecture design 
-
-- Akash Shingte
-    - Implementation of BlockingQueueFeedAggregator and FeedScanner.
-    - Tests for the Blocking Queue implementation of aggregation
-    - Refactored FeedMessage with comparator.
-    - Execution speed tests.
-    - Architecture design
-
 ## Project Description
 RSS is a type of web feed which allows interested users to receive updates about their preferred web-based content within a very short time after it is updated.RSS Feed Reader aggregates multiple RSS feeds to display them in a single place.
 RSS Feed aggregator is the perfect project to demonstrate the power of multithreading. It is a means to show the famous problem of producer-consumer. There are multiple RSS Feed available on the web. To display the content of various sites in one place we need to -
